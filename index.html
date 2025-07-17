@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LA NUBE BOT - Zoom OAuth Callback</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 500px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .loading {
+            color: #666;
+            margin: 20px 0;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">✦　ＬＡ　ＮＵＢＥ　ＢＯＴ　☁️</div>
+        <div class="spinner"></div>
+        <div class="loading">Connecting to Zoom...</div>
+        <p>You will be redirected automatically.</p>
+    </div>
+
+    <script>
+        // Extract URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const state = urlParams.get('state');
+        const error = urlParams.get('error');
+        
+        // Use your specific Replit domain
+        const replitDomain = 'https://411e8303-2840-4b4b-8880-20d13bd8d562-00-15vq28pb9dmr5.kirk.replit.dev';
+        
+        // Construct redirect URL
+        let redirectUrl = `${replitDomain}/zoom/callback?`;
+        
+        if (code) redirectUrl += `code=${encodeURIComponent(code)}&`;
+        if (state) redirectUrl += `state=${encodeURIComponent(state)}&`;
+        if (error) redirectUrl += `error=${encodeURIComponent(error)}&`;
+        
+        // Remove trailing & or ?
+        redirectUrl = redirectUrl.replace(/[&?]$/, '');
+        
+        console.log('Redirecting to:', redirectUrl);
+        
+        // Redirect after 2 seconds to show the loading screen
+        setTimeout(() => {
+            window.location.href = redirectUrl;
+        }, 2000);
+    </script>
+</body>
+</html>
