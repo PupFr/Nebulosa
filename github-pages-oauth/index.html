@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔐 OAuth Callback - LA NUBE BOT</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; 
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container { 
+            max-width: 600px; 
+            background: rgba(255,255,255,0.1); 
+            padding: 40px; 
+            border-radius: 20px; 
+            text-align: center; 
+            backdrop-filter: blur(15px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+        .success { color: #2ecc71; font-size: 3em; margin-bottom: 20px; }
+        .processing { color: #f39c12; font-size: 2em; margin: 20px 0; }
+        .code-display {
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            margin: 20px 0;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success">✅</div>
+        <h1>OAuth Autorización Exitosa</h1>
+        <p>LA NUBE BOT ha recibido los permisos de Zoom</p>
+        
+        <div class="processing">🔄 Procesando...</div>
+        
+        <div id="status">Enviando código de autorización al bot...</div>
+        
+        <div class="code-display" id="authCode">
+            Código: <span id="codeValue">Obteniendo...</span>
+        </div>
+        
+        <div id="result"></div>
+        
+        <p style="margin-top: 30px; opacity: 0.8;">
+            Puedes cerrar esta ventana
+        </p>
+    </div>
+
+    <script>
+        // Extraer código de autorización de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const authCode = urlParams.get('code');
+        const state = urlParams.get('state');
+        const error = urlParams.get('error');
+        
+        const codeValueElement = document.getElementById('codeValue');
+        const statusElement = document.getElementById('status');
+        const resultElement = document.getElementById('result');
+        
+        if (error) {
+            statusElement.innerHTML = '❌ Error en autorización: ' + error;
+            codeValueElement.textContent = 'Error: ' + error;
+            return;
+        }
+        
+        if (!authCode) {
+            statusElement.innerHTML = '❌ No se recibió código de autorización';
+            codeValueElement.textContent = 'No encontrado';
+            return;
+        }
+        
+        // Mostrar código
+        codeValueElement.textContent = authCode;
+        
+        // Enviar al bot via webhook/endpoint
+        sendToBot(authCode, state);
+        
+        async function sendToBot(code, state) {
+            try {
+                // Intentar varios endpoints
+                const endpoints = [
+                    'https://api.telegram.org/bot' + getBotToken() + '/sendMessage',
+                    // Backup: usar un webhook público
+                    'https://webhook.site/your-webhook-id'
+                ];
+                
+                const message = `🔐 OAuth Code Received:
+Code: ${code}
+State: ${state}
+Timestamp: ${new Date().toISOString()}`;
+                
+                // Intentar enviar via Telegram Bot API
+                const response = await fetch(endpoints[0], {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: getAdminChatId(),
+                        text: message,
+                        parse_mode: 'HTML'
+                    })
+                });
+                
+                if (response.ok) {
+                    statusElement.innerHTML = '✅ Código enviado al bot exitosamente';
+                    resultElement.innerHTML = '<div style="color: #2ecc71; margin-top: 20px;">Bot notificado correctamente</div>';
+                } else {
+                    throw new Error('Failed to send to bot');
+                }
+                
+            } catch (error) {
+                console.error('Error sending to bot:', error);
+                statusElement.innerHTML = '⚠️ Error enviando al bot - Código disponible arriba';
+                resultElement.innerHTML = `
+                    <div style="color: #f39c12; margin-top: 20px;">
+                        <p>Por favor, envía este código manualmente al bot:</p>
+                        <p><strong>/oauth ${code}</strong></p>
+                    </div>
+                `;
+            }
+        }
+        
+        function getBotToken() {
+            // En producción, esto debería venir de variables de entorno
+            // o ser configurado dinámicamente
+            return '7474138885:AAF8rxdYSa45tBiKZUIGdNwKRm5U0WKWDnE';
+        }
+        
+        function getAdminChatId() {
+            // Chat ID del administrador del bot
+            // Esto también debería ser configurable
+            return '-1002206516191';
+        }
+        
+        // Log para debugging
+        console.log('OAuth Callback recibido:', {
+            code: authCode,
+            state: state,
+            error: error,
+            fullUrl: window.location.href
+        });
+    </script>
+</body>
+</html>

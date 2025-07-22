@@ -5,17 +5,20 @@ An intelligent Zoom meeting management Telegram bot that revolutionizes virtual 
 ## Features
 
 ### Core Functionality
+- **🤖 Automated Multipin with Puppeteer**: Browser automation for seamless multipin control
 - **Multipin Management**: Camera ON + Hand Raise required for multipin access
 - **Real-time Meeting Monitoring**: Continuous participant scanning with 30-second intervals
 - **Automatic Violation Detection**: Escalating enforcement actions for policy violations
 - **Bilingual Support**: Complete English/Spanish localization with Mexico flag integration
 
 ### Advanced Capabilities
+- **Browser Bot Automation**: Headless Puppeteer for actual multipin execution
 - **Meeting Host Chat**: Private coordination within Zoom meetings for hosts/cohosts
 - **Command Chat Integration**: Strategic alerts and violation notifications
 - **Zoom Chat Monitoring**: Automatic spam detection and link removal
 - **GitHub OAuth Bypass**: Static domain solution for OAuth authentication
 - **Professional Dashboard**: Real-time analytics and monitoring interface
+- **Auto-Start Integration**: Browser bots launch automatically with new meetings
 
 ## Architecture
 
@@ -76,13 +79,23 @@ npm run dev
 - `/lang` - Switch between English/Spanish
 - `/zoomlogin` - Zoom OAuth authentication
 
+### Meeting Management
+- `/createroom [topic]` - Create instant meeting with auto-multipin
+- `/scanroom [meeting_id]` - Scan meeting participants
+- `/monitor [meeting_id]` - Start/stop automatic monitoring
+- `/chatwatch [meeting_id]` - Monitor and moderate Zoom chat
+
+### Browser Bot Automation (Admin)
+- `/startbot [meeting_id] [zoom_link]` - Start browser bot for multipin automation
+- `/stopbot [meeting_id]` - Stop browser bot automation
+- `/botstatus` - View all active browser bots status
+
 ### Admin Commands
 - `/startsession` - Start monitoring session (test mode)
-- `/scanroom` - Scan meeting participants
-- `/status` - Bot system status
-- `/shutdown` - End monitoring session
-- `/stats` - Usage statistics
-- `/logs` - Recent activity logs
+- `/status` - Bot system status with browser bot info
+- `/shutdown` - End monitoring session and cleanup browser bots
+- `/promote [meeting_id] [username]` - Promote user to cohost
+- `/commandchat` - Manage Command Chat integration
 
 ## Development
 

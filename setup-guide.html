@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 Setup Guide - LA NUBE BOT</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+            margin: 0; padding: 20px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; min-height: 100vh;
+        }
+        .container { 
+            max-width: 800px; margin: 0 auto; 
+            background: rgba(255,255,255,0.1); 
+            padding: 40px; border-radius: 20px; 
+            backdrop-filter: blur(10px);
+        }
+        h1, h2, h3 { color: #f39c12; }
+        .step { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .code { background: #2c3e50; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; margin: 10px 0; }
+        .highlight { background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 4px; }
+        .warning { background: rgba(231, 76, 60, 0.2); border-left: 4px solid #e74c3c; padding: 15px; border-radius: 5px; margin: 15px 0; }
+        ul, ol { margin: 15px 0; padding-left: 25px; }
+        li { margin: 8px 0; line-height: 1.6; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Guía de Configuración - LA NUBE BOT</h1>
+        
+        <div class="step">
+            <h2>📋 Requisitos Previos</h2>
+            <ul>
+                <li>✅ Node.js (versión 16 o superior)</li>
+                <li>✅ Cuenta de Telegram con bot creado</li>
+                <li>✅ Cuenta de Zoom con app OAuth creada</li>
+                <li>✅ Dominio propio (ej: pupfrisky.com)</li>
+                <li>✅ Cuenta Short.io (opcional)</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h2>⚙️ Instalación</h2>
+            <h3>1. Clonar repositorio:</h3>
+            <div class="code">git clone https://github.com/PupFr/Nebulosa.git<br>cd Nebulosa</div>
+            
+            <h3>2. Instalar dependencias:</h3>
+            <div class="code">npm install</div>
+            
+            <h3>3. Configurar variables de entorno:</h3>
+            <div class="code">cp .env.example .env<br># Editar .env con tus credenciales</div>
+        </div>
+
+        <div class="step">
+            <h2>🔐 Variables de Entorno</h2>
+            <div class="code">
+BOT_TOKEN=tu_token_de_telegram<br>
+LOG_CHANNEL_ID=tu_canal_de_logs<br>
+ZOOM_ACCOUNT_ID=tu_zoom_account_id<br>
+ZOOM_CLIENT_ID=tu_zoom_client_id<br>
+ZOOM_CLIENT_SECRET=tu_zoom_client_secret<br>
+ZOOM_REDIRECT_URI=https://tudominio.com/zoom-callback<br>
+SHORTIO_API_KEY=tu_shortio_api_key
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🚀 Ejecutar Bot</h2>
+            <div class="code">node bot.cjs</div>
+            
+            <div class="warning">
+                <strong>⚠️ Importante:</strong> Solo debe ejecutarse una instancia del bot a la vez para evitar conflictos con Telegram.
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>📱 Comandos Principales</h2>
+            <ul>
+                <li><span class="highlight">/start</span> - Iniciar bot</li>
+                <li><span class="highlight">/zoomlogin</span> - Conectar Zoom</li>
+                <li><span class="highlight">/startbot</span> - Iniciar automatización</li>
+                <li><span class="highlight">/docs</span> - Ver documentación</li>
+            </ul>
+        </div>
+
+        <p style="text-align: center; margin-top: 40px; opacity: 0.8;">
+            🤖 LA NUBE BOT - Bot de Telegram para automatización de Zoom<br>
+            <a href="https://pupfrisky.com/docs" style="color: #3498db;">📚 Documentación completa</a>
+        </p>
+    </div>
+</body>
+</html>
