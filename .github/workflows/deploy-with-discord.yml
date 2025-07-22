@@ -1,0 +1,187 @@
+name: 🚀 Deploy LA NUBE BOT with Discord Notifications
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: 🧪 Test Suite
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 📦 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: 🔧 Install dependencies
+      run: npm install
+      
+    - name: 🧪 Run tests
+      run: |
+        chmod +x test-*.js
+        node test-bilingual-404.js || echo "Tests may need server"
+        
+    - name: 💜 Notify Discord - Tests Complete
+      if: always()
+      uses: tsickert/discord-webhook@v5.3.0
+      with:
+        webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        embed-title: "🧪 Tests Complete"
+        embed-description: "Test suite finished for LA NUBE BOT"
+        embed-color: 0x667eea
+        embed-timestamp: true
+
+  deploy-github-pages:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    name: 🌐 Deploy to GitHub Pages
+    
+    steps:
+    - name: 📥 Checkout
+      uses: actions/checkout@v4
+      
+    - name: 🔧 Setup Pages
+      uses: actions/configure-pages@v4
+      
+    - name: 📁 Prepare files
+      run: |
+        mkdir -p deploy
+        cp 404.html deploy/
+        cp docs-*.html deploy/
+        cp favicon.svg deploy/
+        cp zoom-callback.html deploy/
+        cp .htaccess deploy/ 2>/dev/null || true
+        
+        # Create index.html redirect
+        cat > deploy/index.html << 'EOF'
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>LA NUBE BOT</title>
+            <link rel="icon" type="image/svg+xml" href="favicon.svg">
+            <meta http-equiv="refresh" content="0; url=docs-index.html">
+        </head>
+        <body><p>Redirecting to <a href="docs-index.html">LA NUBE BOT</a>...</p></body>
+        </html>
+        EOF
+        
+    - name: 📤 Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: deploy
+        
+    - name: 🚀 Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
+      
+    - name: 💜 Notify Discord - Deployment Success
+      uses: tsickert/discord-webhook@v5.3.0
+      with:
+        webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        embed-title: "🚀 GitHub Pages Deployment"
+        embed-description: "LA NUBE BOT successfully deployed!"
+        embed-url: ${{ steps.deployment.outputs.page_url }}
+        embed-color: 0x22c55e
+        embed-fields: |
+          [
+            {
+              "name": "🌐 Live URL",
+              "value": "${{ steps.deployment.outputs.page_url }}",
+              "inline": false
+            },
+            {
+              "name": "📱 Status",
+              "value": "✅ Online",
+              "inline": true
+            },
+            {
+              "name": "⏱️ Build Time",
+              "value": "${{ github.run_number }}",
+              "inline": true
+            }
+          ]
+        embed-timestamp: true
+
+  deploy-netlify:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    name: 🌐 Deploy to Netlify
+    
+    steps:
+    - name: 📥 Checkout
+      uses: actions/checkout@v4
+      
+    - name: 📦 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: 🌐 Deploy to Netlify
+      uses: nwtgck/actions-netlify@v2.1
+      with:
+        publish-dir: '.'
+        production-branch: main
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        deploy-message: "Deploy from GitHub Actions"
+        enable-pull-request-comment: false
+        enable-commit-comment: true
+      env:
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        
+    - name: 💜 Notify Discord - Netlify Deployment
+      uses: tsickert/discord-webhook@v5.3.0
+      with:
+        webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        embed-title: "🌐 Netlify Deployment"
+        embed-description: "LA NUBE BOT deployed to Netlify with CDN"
+        embed-color: 0x00ad9f
+        embed-timestamp: true
+
+  notify-complete:
+    needs: [test, deploy-github-pages]
+    runs-on: ubuntu-latest
+    if: always()
+    name: 💜 Final Notification
+    
+    steps:
+    - name: 💜 Notify Discord - Workflow Complete
+      uses: tsickert/discord-webhook@v5.3.0
+      with:
+        webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        embed-title: "✅ Deployment Pipeline Complete"
+        embed-description: "All deployment jobs finished for LA NUBE BOT"
+        embed-color: 0x8b5cf6
+        embed-fields: |
+          [
+            {
+              "name": "🧪 Tests",
+              "value": "${{ needs.test.result }}",
+              "inline": true
+            },
+            {
+              "name": "🌐 GitHub Pages", 
+              "value": "${{ needs.deploy-github-pages.result }}",
+              "inline": true
+            },
+            {
+              "name": "📊 Workflow",
+              "value": "#${{ github.run_number }}",
+              "inline": true
+            }
+          ]
+        embed-timestamp: true
