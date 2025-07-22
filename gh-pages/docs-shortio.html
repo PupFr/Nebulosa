@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+        <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔗 Short.io Integration - LA NUBE BOT</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAANKSURBVFhH7ZdNaBNBFMdnk7RJ06SNH61WW1uxVkSxKFgQD4IHL148ePHgwYMHL168ePDgwYMHL168ePDgwYMHL168ePDgwYMFL168ePDgwYMXL168ePDgwYMXDx68eO/N7CbZZJNsNpvdSWYevPn95v0z782bnQH+U/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8A==">
+    <meta name="description" content="Integración con Short.io para URLs cortas personalizadas - Gestión de enlaces en LA NUBE BOT">
+    <meta name="keywords" content="Short.io, URL shortener, link management, custom domains">
+    <meta name="author" content="PupFr">
+    <meta name="theme-color" content="#667eea">
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; 
+            line-height: 1.6; margin: 0; padding: 20px; 
+            background: linear-gradient(135deg, #e67e22 0%, #f39c12 100%); 
+            color: white; min-height: 100vh;
+        }
+        .container { 
+            max-width: 900px; margin: 0 auto; 
+            background: rgba(255,255,255,0.1); padding: 40px; 
+            border-radius: 20px; backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .header {
+            text-align: center; margin-bottom: 40px;
+            border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 20px;
+        }
+        h1 { font-size: 3em; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .subtitle { margin-top: 10px; font-size: 1.2em; opacity: 0.9; }
+        h2 { 
+            color: #3498db; margin-top: 30px; 
+            border-left: 4px solid #3498db; padding-left: 15px;
+        }
+        .step-card { 
+            background: rgba(255,255,255,0.15); padding: 25px; margin: 20px 0;
+            border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);
+        }
+        .step-number {
+            background: #e74c3c; color: white; width: 40px; height: 40px;
+            border-radius: 50%; display: inline-flex; align-items: center;
+            justify-content: center; font-weight: bold; margin-right: 15px;
+        }
+        .code-block { 
+            background: rgba(0,0,0,0.4); color: #00ff88; padding: 20px; 
+            border-radius: 10px; font-family: 'Monaco', monospace; 
+            margin: 15px 0; overflow-x: auto; border: 1px solid rgba(0,255,136,0.3);
+        }
+        .warning { 
+            background: rgba(231, 76, 60, 0.2); padding: 15px; 
+            border-radius: 8px; margin: 15px 0; border-left: 4px solid #e74c3c;
+        }
+        .success { 
+            background: rgba(46, 204, 113, 0.2); padding: 15px; 
+            border-radius: 8px; margin: 15px 0; border-left: 4px solid #2ecc71;
+        }
+        .info { 
+            background: rgba(52, 152, 219, 0.2); padding: 15px; 
+            border-radius: 8px; margin: 15px 0; border-left: 4px solid #3498db;
+        }
+        ul li { margin: 8px 0; }
+        .nav-links {
+            text-align: center; margin-top: 40px; padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.3);
+        }
+        .nav-links a {
+            display: inline-block; margin: 0 15px; padding: 12px 25px;
+            background: rgba(255,255,255,0.2); color: white; border-radius: 25px;
+            text-decoration: none; transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .nav-links a:hover { 
+            background: rgba(255,255,255,0.3); 
+            transform: translateY(-2px);
+        }
+        .feature-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px; margin: 30px 0;
+        }
+        .feature-card { 
+            background: rgba(255,255,255,0.1); padding: 20px; 
+            border-radius: 15px; text-align: center;
+        }
+        .example-box {
+            background: rgba(52, 152, 219, 0.3); padding: 20px;
+            border-radius: 10px; margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔗 Short.io Setup</h1>
+            <p class="subtitle">Configuración de enlaces cortos para LA NUBE BOT</p>
+        </div>
+
+        <div class="info">
+            <h3>📋 ¿Por qué usar Short.io?</h3>
+            <ul>
+                <li>🔗 <strong>URLs más cortas</strong> - Mejor UX en móvil</li>
+                <li>📊 <strong>Analytics</strong> - Estadísticas de clicks</li>
+                <li>🎨 <strong>Branded Links</strong> - Usa tu dominio pupfrisky.com</li>
+                <li>⚡ <strong>Redirects rápidos</strong> - Sin delays</li>
+            </ul>
+        </div>
+
+        <div class="step-card">
+            <h2><span class="step-number">1</span>Crear Cuenta en Short.io</h2>
+            <ol>
+                <li>Ve a <a href="https://short.io" target="_blank" style="color: #3498db;">https://short.io</a></li>
+                <li>Registra una cuenta gratuita</li>
+                <li>Verifica tu email</li>
+                <li>Completa el setup inicial</li>
+            </ol>
+            
+            <div class="success">
+                <strong>✅ Plan Gratuito incluye:</strong>
+                <ul>
+                    <li>1,000 clicks por mes</li>
+                    <li>Enlaces ilimitados</li>
+                    <li>Analytics básico</li>
+                    <li>API access</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-card">
+            <h2><span class="step-number">2</span>Configurar Dominio Personalizado</h2>
+            
+            <h3>🌐 Agregar pupfrisky.com</h3>
+            <ol>
+                <li>Ve a <strong>Settings</strong> → <strong>Domains</strong></li>
+                <li>Click en <strong>"Add Domain"</strong></li>
+                <li>Ingresa: <code>pupfrisky.com</code></li>
+                <li>Configura DNS según las instrucciones</li>
+            </ol>
+
+            <div class="example-box">
+                <h3>📋 Configuración DNS necesaria:</h3>
+                <div class="code-block">
+# Agregar estos registros DNS:
+CNAME short → cname.short.io
+TXT   short → "short-verification=tu_codigo_aqui"
+                </div>
+            </div>
+        </div>
+
+        <div class="step-card">
+            <h2><span class="step-number">3</span>Obtener API Key</h2>
+            <ol>
+                <li>Ve a <strong>Settings</strong> → <strong>Integrations</strong></li>
+                <li>En la sección <strong>"API"</strong></li>
+                <li>Click en <strong>"Create API Key"</strong></li>
+                <li>Copia tu API key</li>
+            </ol>
+
+            <div class="warning">
+                <strong>⚠️ Guarda tu API key de forma segura:</strong>
+                <p>Esta key permite crear y gestionar enlaces en tu cuenta.</p>
+            </div>
+        </div>
+
+        <div class="step-card">
+            <h2><span class="step-number">4</span>Configurar en LA NUBE BOT</h2>
+            
+            <h3>📝 Actualizar archivo .env</h3>
+            <div class="code-block">
+# Short.io Configuration
+SHORTIO_API_KEY=tu_api_key_aqui
+SHORTIO_DOMAIN=pupfrisky.com
+            </div>
+
+            <div class="info">
+                <strong>📍 Ubicación actual en el bot:</strong>
+                <p>El bot ya está configurado para usar Short.io en el comando <code>/zoomlogin</code></p>
+            </div>
+        </div>
+
+        <div class="step-card">
+            <h2><span class="step-number">5</span>Crear Enlaces Predefinidos</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>📚 Documentación</h3>
+                    <div class="code-block">
+pupfrisky.com/docs
+↓
+github.com/PupFr/Nebulosa/docs
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <h3>🔐 OAuth</h3>
+                    <div class="code-block">
+pupfrisky.com/zoom-callback
+↓
+pupfrisky.com/zoom-callback.php
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <h3>📖 Setup</h3>
+                    <div class="code-block">
+pupfrisky.com/setup
+↓
+github.com/PupFr/Nebulosa/setup
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-card">
+            <h2><span class="step-number">6</span>Probar Integración</h2>
+            
+            <div class="success">
+                <h3>✅ Comandos para probar:</h3>
+                <ol>
+                    <li>Usa <code>/zoomlogin</code> en Telegram</li>
+                    <li>Verifica que se genere enlace corto</li>
+                    <li>Click en el enlace</li>
+                    <li>Confirma redirección correcta</li>
+                </ol>
+            </div>
+
+            <div class="example-box">
+                <h3>📊 Monitorear en Short.io:</h3>
+                <ul>
+                    <li>Ve a <strong>Dashboard</strong> para ver stats</li>
+                    <li>Clicks en tiempo real</li>
+                    <li>Geografía de usuarios</li>
+                    <li>Dispositivos y browsers</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-card">
+            <h2><span class="step-number">7</span>Enlaces Recomendados</h2>
+            
+            <div class="code-block">
+# Enlaces útiles para crear manualmente:
+pupfrisky.com/bot       → t.me/tu_bot_username
+pupfrisky.com/github    → github.com/PupFr/Nebulosa
+pupfrisky.com/support   → t.me/tu_grupo_soporte
+pupfrisky.com/guide     → github.com/PupFr/Nebulosa/docs/setup-guide.md
+            </div>
+        </div>
+
+        <div class="warning">
+            <h3>🚨 Troubleshooting Común:</h3>
+            <ul>
+                <li><strong>Domain not verified:</strong> Revisa configuración DNS</li>
+                <li><strong>API errors:</strong> Verifica API key válida</li>
+                <li><strong>Redirect fails:</strong> Confirma URL destino accesible</li>
+                <li><strong>Rate limits:</strong> Plan gratuito tiene límites de uso</li>
+            </ul>
+        </div>
+
+        <div class="info">
+            <h3>💡 Consejos Pro:</h3>
+            <ul>
+                <li>Usa <strong>tags</strong> para organizar enlaces</li>
+                <li>Configura <strong>expiration dates</strong> para enlaces temporales</li>
+                <li>Usa <strong>password protection</strong> para enlaces privados</li>
+                <li>Monitorea <strong>click analytics</strong> regularmente</li>
+            </ul>
+        </div>
+
+        <div class="nav-links">
+            <a href="/docs-setup.html">🔧 Setup Guide</a>
+            <a href="/docs-oauth.html">🔐 OAuth Setup</a>
+            <a href="/docs-multipin.html">📌 Multipin Automation</a>
+            <a href="https://github.com/PupFr/Nebulosa" target="_blank">📂 GitHub Repository</a>
+        </div>
+    </div>
+</body>
+</html>
