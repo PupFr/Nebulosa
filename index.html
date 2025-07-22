@@ -63,11 +63,11 @@
         const state = urlParams.get('state');
         const error = urlParams.get('error');
         
-        // Use your specific Replit domain
-        const replitDomain = 'https://411e8303-2840-4b4b-8880-20d13bd8d562-00-15vq28pb9dmr5.kirk.replit.dev';
+        // Use GitHub Pages as the main domain (no external redirects needed)
+        const baseDomain = window.location.origin; // Uses current GitHub Pages URL
         
-        // Construct redirect URL
-        let redirectUrl = `${replitDomain}/zoom/callback?`;
+        // Construct redirect URL to stay within GitHub Pages
+        let redirectUrl = `${baseDomain}/zoom-callback.html?`;
         
         if (code) redirectUrl += `code=${encodeURIComponent(code)}&`;
         if (state) redirectUrl += `state=${encodeURIComponent(state)}&`;
