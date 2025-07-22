@@ -1,4 +1,4 @@
-import puppeteer from 'puppeteer';
+const puppeteer = require('puppeteer');
 
 class ZoomBrowserBot {
   constructor(meetingData, userToken = null) {
@@ -172,9 +172,29 @@ class ZoomBrowserBot {
 
       console.log(`🎯 Attempting to multipin user: ${userName}`);
       
-      // Find the user's video element
-      const userVideoSelector = `[title*="${userName}"], [aria-label*="${userName}"], [data-testid*="${userName}"]`;
-      const videoElement = await this.page.$(userVideoSelector);
+      // Enhanced selectors for finding user's video element
+      const userVideoSelectors = [
+        `[title*="${userName}"]`,
+        `[aria-label*="${userName}"]`,
+        `[data-testid*="${userName}"]`,
+        `.participant-name:contains("${userName}")`,
+        `.video-container[data-user*="${userName}"]`,
+        `.participant-video[aria-label*="${userName}"]`,
+        `[data-participant-name*="${userName}"]`
+      ];
+      
+      let videoElement = null;
+      for (const selector of userVideoSelectors) {
+        try {
+          videoElement = await this.page.$(selector);
+          if (videoElement) {
+            console.log(`✅ Found user video with selector: ${selector}`);
+            break;
+          }
+        } catch (e) {
+          // Continue to next selector
+        }
+      }
       
       if (!videoElement) {
         console.log(`❌ Could not find video for user: ${userName}`);
@@ -184,11 +204,56 @@ class ZoomBrowserBot {
       // Right-click on user's video
       await videoElement.click({ button: 'right' });
       
-      // Wait for context menu
-      await this.page.waitForSelector('.context-menu, [role="menu"]', { timeout: 5000 });
+      // Wait for context menu with multiple selectors
+      const contextMenuSelectors = [
+        '.context-menu',
+        '[role="menu"]',
+        '.menu-container',
+        '.right-click-menu',
+        '.participant-menu'
+      ];
       
-      // Click on "Pin" or "Multi-pin" option
-      const pinOption = await this.page.$('li:contains("Pin"), li:contains("Multi-pin"), [role="menuitem"]:contains("Pin")');
+      let contextMenu = null;
+      for (const selector of contextMenuSelectors) {
+        try {
+          await this.page.waitForSelector(selector, { timeout: 2000 });
+          contextMenu = await this.page.$(selector);
+          if (contextMenu) break;
+        } catch (e) {
+          // Continue to next selector
+        }
+      }
+      
+      if (!contextMenu) {
+        console.log(`❌ Context menu not found for: ${userName}`);
+        return 'CONTEXT_MENU_NOT_FOUND';
+      }
+      
+      // Enhanced selectors for pin/multipin option
+      const pinOptionSelectors = [
+        'li:contains("Pin")',
+        'li:contains("Multi-pin")',
+        '[role="menuitem"]:contains("Pin")',
+        '[role="menuitem"]:contains("Multi-pin")',
+        '.menu-item:contains("Pin")',
+        'button:contains("Pin")',
+        '[data-testid*="pin"]',
+        '[aria-label*="pin"]'
+      ];
+      
+      let pinOption = null;
+      for (const selector of pinOptionSelectors) {
+        try {
+          pinOption = await this.page.$(selector);
+          if (pinOption) {
+            console.log(`✅ Found pin option with selector: ${selector}`);
+            break;
+          }
+        } catch (e) {
+          // Continue to next selector
+        }
+      }
+      
       if (pinOption) {
         await pinOption.click();
         
@@ -216,23 +281,85 @@ class ZoomBrowserBot {
 
       console.log(`🔄 Removing multipin for user: ${userName}`);
       
-      // Find pinned video and right-click
-      const pinnedVideoSelector = `.pinned-video[title*="${userName}"], .pinned[aria-label*="${userName}"]`;
-      const pinnedElement = await this.page.$(pinnedVideoSelector);
+      // Enhanced selectors for finding pinned video
+      const pinnedVideoSelectors = [
+        `.pinned-video[title*="${userName}"]`,
+        `.pinned[aria-label*="${userName}"]`,
+        `.pin-container[data-user*="${userName}"]`,
+        `.multi-pinned[title*="${userName}"]`,
+        `[data-testid*="pinned"][aria-label*="${userName}"]`,
+        `.participant-pinned:contains("${userName}")`,
+        `.video-pinned[data-participant*="${userName}"]`
+      ];
+      
+      let pinnedElement = null;
+      for (const selector of pinnedVideoSelectors) {
+        try {
+          pinnedElement = await this.page.$(selector);
+          if (pinnedElement) {
+            console.log(`✅ Found pinned video with selector: ${selector}`);
+            break;
+          }
+        } catch (e) {
+          // Continue to next selector
+        }
+      }
       
       if (pinnedElement) {
         await pinnedElement.click({ button: 'right' });
-        await this.page.waitForSelector('.context-menu, [role="menu"]', { timeout: 5000 });
         
-        const unpinOption = await this.page.$('li:contains("Unpin"), [role="menuitem"]:contains("Unpin")');
-        if (unpinOption) {
-          await unpinOption.click();
+        // Wait for context menu
+        const contextMenuSelectors = [
+          '.context-menu',
+          '[role="menu"]',
+          '.menu-container',
+          '.right-click-menu'
+        ];
+        
+        let contextMenu = null;
+        for (const selector of contextMenuSelectors) {
+          try {
+            await this.page.waitForSelector(selector, { timeout: 2000 });
+            contextMenu = await this.page.$(selector);
+            if (contextMenu) break;
+          } catch (e) {
+            // Continue to next selector
+          }
+        }
+        
+        if (contextMenu) {
+          // Enhanced selectors for unpin option
+          const unpinOptionSelectors = [
+            'li:contains("Unpin")',
+            '[role="menuitem"]:contains("Unpin")',
+            '.menu-item:contains("Unpin")',
+            'button:contains("Unpin")',
+            '[data-testid*="unpin"]',
+            '[aria-label*="unpin"]'
+          ];
           
-          this.multipinnedUsers.delete(userName);
-          console.log(`✅ Successfully unpinned: ${userName}`);
-          console.log(`🔄 MULTIPIN REMOVED: ${userName} - Browser bot action`);
+          let unpinOption = null;
+          for (const selector of unpinOptionSelectors) {
+            try {
+              unpinOption = await this.page.$(selector);
+              if (unpinOption) {
+                console.log(`✅ Found unpin option with selector: ${selector}`);
+                break;
+              }
+            } catch (e) {
+              // Continue to next selector
+            }
+          }
           
-          return 'MULTIPIN_REMOVED';
+          if (unpinOption) {
+            await unpinOption.click();
+            
+            this.multipinnedUsers.delete(userName);
+            console.log(`✅ Successfully unpinned: ${userName}`);
+            console.log(`🔄 MULTIPIN REMOVED: ${userName} - Browser bot action`);
+            
+            return 'MULTIPIN_REMOVED';
+          }
         }
       }
       
@@ -300,4 +427,4 @@ class ZoomBrowserBot {
   }
 }
 
-export { ZoomBrowserBot };
+module.exports = { ZoomBrowserBot };

@@ -19,6 +19,10 @@ const {
   startMeeting,
   endMeeting 
 } = require('./zoomAuth.js');
+
+// Import ZoomBrowserBot for multipin automation
+const { ZoomBrowserBot } = require('./zoomBrowserBot.js');
+
 require('dotenv').config();
 
 // Error handling for bot
@@ -69,6 +73,10 @@ let chatHistory = new Map(); // meetingId -> [{user, message, timestamp}]
 let spamDetection = new Map(); // userId -> {messageCount, lastMessage, violations}
 let meetingHostChats = new Map(); // meetingId -> {hostId, cohostIds: Set(), participants: Set()}
 
+// Browser bot management for multipin automation
+let activeBrowserBots = new Map(); // meetingId -> ZoomBrowserBot instance
+let pendingMultipinActions = new Map(); // meetingId -> [{action: 'pin'|'unpin', userName, timestamp}]
+
 // Alert channels - Currently using NEBULOSO'S OBSERVATORY as primary channel
 const OBSERVATORY_CHANNEL = process.env.OBSERVATORY_CHANNEL_ID || process.env.LOG_CHANNEL_ID; // Primary logging channel
 const HIGH_HEAT_CHANNEL = process.env.HIGH_HEAT_CHANNEL_ID || process.env.OBSERVATORY_CHANNEL_ID || process.env.LOG_CHANNEL_ID; // Fallback to same channel
@@ -88,11 +96,15 @@ const strings = {
         "/startsession - Start Zoom session (Admin only)",
         "/roominfo - Get current Zoom Room information",
         "/scanroom - Advanced participant monitoring with auto-moderation",
-        "/createroom - Create instant meeting",
+        "/createroom - Create instant meeting with auto-multipin",
         "/monitor - Start/stop automatic monitoring",
+        "/startbot - Start browser bot for multipin automation (Admin)",
+        "/stopbot - Stop browser bot automation (Admin)",
+        "/botstatus - Check browser bot status",
         "/chatwatch - Monitor and moderate Zoom chat",
         "/promote - Promote user to cohost", 
         "/commandchat - Manage Command Chat integration",
+        "/docs - Access documentation and guides",
         "/status - Current session status",
         "/shutdown - Stop bot (Admin only)",
         "/language - Change language / Cambiar idioma 🇺🇸🇲🇽"
@@ -101,7 +113,9 @@ const strings = {
       featureList: [
         "✅ OAuth integration with Zoom",
         "✅ Secure meeting management", 
-        "✅ Real-time monitoring"
+        "✅ Real-time monitoring",
+        "✅ Automated multipin via browser bot",
+        "✅ Camera + hand raise requirements"
       ],
       ready: "Ready to start? Use /zoomlogin to connect your Zoom account!"
     },
@@ -152,11 +166,15 @@ const strings = {
         "/startsession - Iniciar sesión de Zoom (Solo admin)",
         "/roominfo - Información de la sala de Zoom actual",
         "/scanroom - Monitoreo avanzado con auto-moderación",
-        "/createroom - Crear reunión instantánea", 
+        "/createroom - Crear reunión instantánea con auto-multipin", 
         "/monitor - Iniciar/parar monitoreo automático",
+        "/startbot - Iniciar bot navegador para automatización multipin (Admin)",
+        "/stopbot - Detener automatización bot navegador (Admin)",
+        "/botstatus - Verificar estado del bot navegador",
         "/chatwatch - Monitorear y moderar chat de Zoom",
         "/promote - Promover usuario a cohost",
         "/commandchat - Gestionar integración Command Chat",
+        "/docs - Acceder documentación y guías",
         "/status - Estado de la sesión actual",
         "/shutdown - Terminar bot (Solo admin)",
         "/language - Change language / Cambiar idioma 🇺🇸🇲🇽"
@@ -165,7 +183,9 @@ const strings = {
       featureList: [
         "✅ Integración OAuth con Zoom",
         "✅ Gestión segura de reuniones",
-        "✅ Monitoreo en tiempo real"
+        "✅ Monitoreo en tiempo real",
+        "✅ Multipin automatizado vía bot navegador",
+        "✅ Requisitos cámara + mano levantada"
       ],
       ready: "¡Listo para empezar? ¡Usa /zoomlogin para conectar tu cuenta de Zoom!"
     },
@@ -707,6 +727,124 @@ ${meetingId ? `🆔 Meeting: ${meetingId}` : ''}
   }
 }
 
+// 🤖 Browser Bot Management for Multipin Automation
+async function startBrowserBot(meetingId, meetingData, userToken = null) {
+  try {
+    if (activeBrowserBots.has(meetingId)) {
+      console.log(`🤖 Browser bot already active for meeting: ${meetingId}`);
+      return activeBrowserBots.get(meetingId);
+    }
+
+    console.log(`🚀 Starting browser bot for meeting: ${meetingId}`);
+    
+    const browserBot = new ZoomBrowserBot(meetingData, userToken);
+    const started = await browserBot.start();
+    
+    if (started) {
+      activeBrowserBots.set(meetingId, browserBot);
+      pendingMultipinActions.set(meetingId, []);
+      
+      console.log(`✅ Browser bot started for meeting: ${meetingId}`);
+      
+      await logToObservatory(
+        `🤖 BROWSER BOT STARTED\n🆔 Meeting: ${meetingId}\n🎯 Multipin automation: ACTIVE\n🔗 Bot name: ${browserBot.botName}`,
+        null,
+        meetingId
+      );
+      
+      return browserBot;
+    } else {
+      console.error(`❌ Failed to start browser bot for meeting: ${meetingId}`);
+      return null;
+    }
+  } catch (error) {
+    console.error(`❌ Error starting browser bot for meeting ${meetingId}:`, error);
+    return null;
+  }
+}
+
+async function stopBrowserBot(meetingId) {
+  try {
+    const browserBot = activeBrowserBots.get(meetingId);
+    if (browserBot) {
+      await browserBot.cleanup();
+      activeBrowserBots.delete(meetingId);
+      pendingMultipinActions.delete(meetingId);
+      
+      console.log(`🔚 Browser bot stopped for meeting: ${meetingId}`);
+      
+      await logToObservatory(
+        `🔚 BROWSER BOT STOPPED\n🆔 Meeting: ${meetingId}\n🎯 Multipin automation: DEACTIVATED`,
+        null,
+        meetingId
+      );
+    }
+  } catch (error) {
+    console.error(`❌ Error stopping browser bot for meeting ${meetingId}:`, error);
+  }
+}
+
+async function executeMultipinAction(meetingId, action, userName) {
+  try {
+    const browserBot = activeBrowserBots.get(meetingId);
+    if (!browserBot || !browserBot.isReady()) {
+      console.log(`⚠️ Browser bot not ready for meeting: ${meetingId}`);
+      return 'BOT_NOT_READY';
+    }
+
+    let result;
+    if (action === 'pin') {
+      result = await browserBot.multipinUser(userName);
+      console.log(`🎯 Multipin action executed: ${userName} - Result: ${result}`);
+    } else if (action === 'unpin') {
+      result = await browserBot.unpinUser(userName);
+      console.log(`🔄 Unpin action executed: ${userName} - Result: ${result}`);
+    }
+
+    await logToObservatory(
+      `🎛️ MULTIPIN ACTION\n🆔 Meeting: ${meetingId}\n👤 User: ${userName}\n🎯 Action: ${action.toUpperCase()}\n📊 Result: ${result}`,
+      null,
+      meetingId
+    );
+
+    return result;
+  } catch (error) {
+    console.error(`❌ Error executing multipin action for ${userName}:`, error);
+    return 'ERROR';
+  }
+}
+
+async function promoteUserToCohost(meetingId, userId, userName) {
+  try {
+    const browserBot = activeBrowserBots.get(meetingId);
+    if (!browserBot || !browserBot.isReady()) {
+      console.log(`⚠️ Browser bot not ready for cohost promotion: ${meetingId}`);
+      return false;
+    }
+
+    // Wait for cohost status with a promotion request callback
+    const requestCallback = async () => {
+      console.log(`📨 Requesting cohost promotion for browser bot in meeting: ${meetingId}`);
+      // This callback can send a message to meeting host requesting promotion
+    };
+
+    const promoted = await browserBot.waitForCohostStatus(requestCallback);
+    
+    if (promoted) {
+      await logToObservatory(
+        `👑 BROWSER BOT PROMOTED\n🆔 Meeting: ${meetingId}\n🤖 Bot: ${browserBot.botName}\n🎯 Multipin automation: ENHANCED`,
+        null,
+        meetingId
+      );
+    }
+
+    return promoted;
+  } catch (error) {
+    console.error(`❌ Error promoting browser bot to cohost:`, error);
+    return false;
+  }
+}
+
 // Grant or revoke multipin access based on camera status with enhanced messaging
 // 🎯 CORE MULTIPIN SYSTEM - Camera + Hand Raise Required
 async function manageMultipinAccess(accessToken, meetingId, participant) {
@@ -735,6 +873,10 @@ async function manageMultipinAccess(accessToken, meetingId, participant) {
       clearTimeout(multipinTimers.get(userId));
       multipinTimers.delete(userId);
     }
+
+    // 🎯 EXECUTE ACTUAL MULTIPIN via Browser Bot
+    const multipinResult = await executeMultipinAction(meetingId, 'pin', userName);
+    const multipinStatus = multipinResult === 'MULTIPIN_GRANTED' ? '✅ ACTIVE' : '⚠️ PENDING';
     
     const multipinGrantMessage = `
 🎯　ＭＵＬＴＩＰＩＮ　ＧＲＡＮＴＥＤ　☁️
@@ -743,6 +885,7 @@ async function manageMultipinAccess(accessToken, meetingId, participant) {
 
 📸 Camera: ON ✅  •  🙋 Hand raised: YES ✅
 🎛️ Multipin access: GRANTED ⚡
+🤖 Browser automation: ${multipinStatus}
 
 Support LA NUBE BOT:
 💳 Donate: https://paypal.me/lanubeteam
@@ -758,7 +901,7 @@ Keep your camera on to maintain access! 📸
     }
     
     await logToObservatory(
-      `🎯 MULTIPIN GRANTED\n👤 ${userName}\n📹 Camera: ON\n🙋 Hand raised: YES\n💌 Thank you message sent\n⚡ Access activated`,
+      `🎯 MULTIPIN GRANTED\n👤 ${userName}\n📹 Camera: ON\n🙋 Hand raised: YES\n🤖 Browser action: ${multipinResult}\n💌 Thank you message sent\n⚡ Access activated`,
       userId,
       meetingId
     );
@@ -780,6 +923,10 @@ Keep your camera on to maintain access! 📸
         multipinGrants.delete(userId);
         multipinTimers.delete(userId);
         
+        // 🔄 EXECUTE ACTUAL UNPIN via Browser Bot
+        const unpinResult = await executeMultipinAction(meetingId, 'unpin', userName);
+        const unpinStatus = unpinResult === 'MULTIPIN_REMOVED' ? '✅ REMOVED' : '⚠️ ERROR';
+        
         const revocationMessage = `
 🎯　ＭＵＬＴＩＰＩＮ　ＡＣＣＥＳＳ　ＥＸＰＩＲＥＤ　☁️
 
@@ -787,6 +934,7 @@ Hey ${userName}!
 
 ⏰ Camera has been OFF for 60+ seconds
 🎛️ Multipin access: EXPIRED
+🤖 Browser automation: ${unpinStatus}
 🔄 To regain access: Turn camera ON + Raise your hand
 
 📸 Camera ON + 🙋 Hand raised = Instant multipin restoration!
@@ -799,7 +947,7 @@ Hey ${userName}!
         }
         
         await logToObservatory(
-          `🎯 MULTIPIN EXPIRED\n👤 ${userName}\n⏰ Camera off for 60+ seconds\n🔄 Must raise hand to regain access`,
+          `🎯 MULTIPIN EXPIRED\n👤 ${userName}\n⏰ Camera off for 60+ seconds\n🤖 Browser action: ${unpinResult}\n🔄 Must raise hand to regain access`,
           userId,
           meetingId
         );
@@ -1034,21 +1182,55 @@ async function processViolations(accessToken, meetingId, participant, violations
   }
 }
 
-function generateAuthUrl(userId) {
-  // GitHub Pages OAuth bypass - replace with your actual GitHub Pages URL
-  const redirectUri = process.env.GITHUB_OAUTH_CALLBACK || 'https://pupfr.github.io/Nebulosa/';
+// Short.io URL shortening function
+async function shortenUrl(longUrl) {
+  const apiKey = process.env.SHORTIO_API_KEY;
+  
+  if (!apiKey || apiKey === 'your_shortio_api_key_here') {
+    console.log('🔗 No Short.io API key found, using original URL');
+    return longUrl;
+  }
+  
+  try {
+    const response = await axios.post('https://api.short.io/links', {
+      originalURL: longUrl,
+      domain: 'short.io', // or your custom domain
+      allowDuplicates: false,
+      tags: ['zoom-oauth', 'la-nube-bot']
+    }, {
+      headers: {
+        'Authorization': apiKey,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    const shortUrl = response.data.shortURL;
+    console.log('✅ URL shortened:', longUrl, '->', shortUrl);
+    return shortUrl;
+    
+  } catch (error) {
+    console.log('⚠️ Short.io error, using original URL:', error.message);
+    return longUrl;
+  }
+}
+
+async function generateAuthUrl(userId) {
+  const redirectUri = process.env.ZOOM_REDIRECT_URI || 'https://pupfrisky.com/zoom-callback';
   const clientId = (process.env.ZOOM_USER_CLIENT_ID || 'K3t8Sd3rSZOSKfkyMftDXg').trim();
   
-  // Add debug logging for troubleshooting
-  console.log('🔍 OAuth URL Generation Debug (GitHub Pages):');
-  console.log('Client ID:', clientId);
-  console.log('GitHub Pages Redirect URI:', redirectUri);
-  console.log('Encoded URI:', encodeURIComponent(redirectUri));
-  
+  // Create the OAuth URL
   const authUrl = `https://zoom.us/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${userId}`;
-  console.log('Final OAuth URL:', authUrl);
   
-  return authUrl;
+  console.log('🔍 OAuth URL Generation:');
+  console.log('Client ID:', clientId);
+  console.log('Redirect URI:', redirectUri);
+  console.log('Original OAuth URL:', authUrl);
+  
+  // Shorten the URL with Short.io
+  const shortUrl = await shortenUrl(authUrl);
+  console.log('Final URL (shortened):', shortUrl);
+  
+  return shortUrl;
 }
 
 // Commands
@@ -1155,56 +1337,48 @@ bot.onText(/\/zoomlogin/, async (msg) => {
   try {
     const lang = getUserLanguage(userId);
     
-    // Free alternative: Create test mode without OAuth for development
-    const testMessage = lang === 'es' ? `
-🧪 **Modo de Prueba LA NUBE BOT**
+    // Show loading message while generating short URL
+    const loadingMsg = lang === 'es' ? 
+      '🔗 Generando enlace de autorización seguro...' : 
+      '🔗 Generating secure authorization link...';
+    
+    const loadingMessage = await bot.sendMessage(chatId, loadingMsg);
+    
+    // Generate the OAuth URL (with short.io)
+    const authUrl = await generateAuthUrl(userId);
+    
+    const zoomLoginText = strings[lang].zoomlogin;
+    
+    const message = `
+${zoomLoginText.title}
 
-Debido a limitaciones temporales de OAuth de Zoom, el bot está funcionando en modo de prueba.
+${zoomLoginText.instruction}
+👉 [Connect to Zoom](${authUrl})
 
-**Funciones Disponibles:**
-✅ Comandos de gestión de sesiones
-✅ Sistema de monitoreo simulado
-✅ Interfaz de dashboard completa
-✅ Gestión de multipin (simulado)
-✅ Comandos administrativos
+${zoomLoginText.security}
+${zoomLoginText.securityList.join('\n')}
 
-**Para usar:**
-• /startsession - Iniciar sesión de prueba
-• /scanroom - Simular escaneo de participantes
-• /status - Ver estado del sistema
-• /shutdown - Finalizar sesión
+${zoomLoginText.steps}
+${zoomLoginText.stepList.join('\n')}
 
-**Nota:** Una vez resuelto el OAuth con Zoom, todas las funciones reales estarán disponibles.
+${zoomLoginText.confirmation}
 
-¡Puedes probar todas las características del bot ahora!` : `
-🧪 **LA NUBE BOT Test Mode**
+🔗 *Shortened link for easy access*
+    `;
 
-Due to temporary Zoom OAuth limitations, the bot is running in test mode.
-
-**Available Functions:**
-✅ Session management commands
-✅ Simulated monitoring system
-✅ Complete dashboard interface
-✅ Multipin management (simulated)
-✅ Administrative commands
-
-**To use:**
-• /startsession - Start test session
-• /scanroom - Simulate participant scan
-• /status - View system status
-• /shutdown - End session
-
-**Note:** Once Zoom OAuth is resolved, all real functions will be available.
-
-You can test all bot features now!`;
-
-    await bot.sendMessage(chatId, testMessage, { parse_mode: 'Markdown' });
-    await logToChannel(`User @${username} accessed test mode`, userId);
+    // Delete loading message and send the actual message
+    await bot.deleteMessage(chatId, loadingMessage.message_id);
+    await bot.sendMessage(chatId, message, { 
+      parse_mode: 'Markdown',
+      disable_web_page_preview: false 
+    });
+    
+    await logToChannel(`New Zoom OAuth request from user: @${username} | Short URL: ${authUrl}`, userId);
     
   } catch (error) {
-    console.error('Error in test mode:', error);
+    console.error('Error generating Zoom auth URL:', error);
     const lang = getUserLanguage(userId);
-    const errorMsg = lang === 'es' ? '❌ Error en modo de prueba.' : '❌ Test mode error.';
+    const errorMsg = strings[lang].errors.authUrl;
     await bot.sendMessage(chatId, errorMsg);
   }
 });
@@ -1655,6 +1829,39 @@ bot.onText(/\/createroom (.*)/, async (msg, match) => {
     
     await logToChannel(`User ${userId} created instant meeting: ${meeting.id}`, userId);
     
+    // 🤖 Auto-start browser bot for multipin automation
+    try {
+      const meetingData = {
+        meetingId: meeting.id.toString(),
+        link: meeting.join_url,
+        passcode: meeting.password || 'No passcode required'
+      };
+      
+      const browserBot = await startBrowserBot(meeting.id.toString(), meetingData, accessToken);
+      
+      if (browserBot) {
+        const autoBotMessage = lang === 'es'
+          ? `🤖 *¡Automatización Activada!*\n\n✅ Browser bot iniciado automáticamente\n🎯 Multipin automático: ACTIVO\n🔄 Monitoreando cámara + mano levantada\n\n*El bot manejará automáticamente:*\n• ✅ Multipin para usuarios con cámara ON + mano\n• ⏰ Unpin tras 60s sin cámara\n• 📝 Registro completo en Observatory`
+          : `🤖 *Automation Activated!*\n\n✅ Browser bot started automatically\n🎯 Automatic multipin: ACTIVE\n🔄 Monitoring camera + hand raised\n\n*Bot will automatically handle:*\n• ✅ Multipin for users with camera ON + hand\n• ⏰ Unpin after 60s without camera\n• 📝 Complete Observatory logging`;
+          
+        await bot.sendMessage(chatId, autoBotMessage, { parse_mode: 'Markdown' });
+        
+        // Notify Command Chat about auto-started bot
+        await notifyCommandChat(
+          `🎯 AUTO-STARTED BROWSER BOT\n🆔 Meeting: ${meeting.id}\n👤 Creator: @${msg.from.username || 'user'}\n🤖 Multipin automation: AUTO-ACTIVE`,
+          meeting.id.toString()
+        );
+      }
+    } catch (autoBotError) {
+      console.error('Error auto-starting browser bot:', autoBotError);
+      // Don't fail the meeting creation if browser bot fails
+      const fallbackMessage = lang === 'es'
+        ? `⚠️ *Nota:* Automatización no disponible ahora. Usa \`/startbot ${meeting.id} ${meeting.join_url}\` para activarla manualmente.`
+        : `⚠️ *Note:* Automation not available now. Use \`/startbot ${meeting.id} ${meeting.join_url}\` to activate it manually.`;
+      
+      await bot.sendMessage(chatId, fallbackMessage, { parse_mode: 'Markdown' });
+    }
+    
   } catch (error) {
     console.error('Error creating meeting:', error);
     
@@ -1698,6 +1905,7 @@ bot.onText(/\/status/, async (msg) => {
   
   const session = activeSessions.get(chatId);
   const uptimeMinutes = Math.floor((Date.now() - botMetrics.uptime) / 1000 / 60);
+  const activeBots = [...activeBrowserBots.entries()];
   
   const lang = getUserLanguage(userId);
   const statusMessage = lang === 'es' ? `
@@ -1715,10 +1923,16 @@ ${session ? `
 • Admin: ${session.adminUser}
 ` : '• Sin sesión activa ❌'}
 
+*Browser Bots (Multipin):*
+${activeBots.length > 0 ? activeBots.map(([meetingId, bot]) => 
+  `• Reunión: ${meetingId}\n  Estado: ${bot.isReady() ? '✅ Activo' : '⚠️ Error'}\n  Bot: ${bot.botName}`
+).join('\n') : '• Sin bots activos ❌'}
+
 *Integración Zoom:*
 • OAuth: Configurado ✅
 • Redirect URI: Configurado ✅
 • API: Lista para usar ✅
+• Automatización: ${activeBots.length > 0 ? '✅ Activa' : '❌ Inactiva'}
 
 *Dashboard:* Disponible en la interfaz web
   ` : `
@@ -1736,10 +1950,16 @@ ${session ? `
 • Admin: ${session.adminUser}
 ` : '• No active session ❌'}
 
+*Browser Bots (Multipin):*
+${activeBots.length > 0 ? activeBots.map(([meetingId, bot]) => 
+  `• Meeting: ${meetingId}\n  Status: ${bot.isReady() ? '✅ Active' : '⚠️ Error'}\n  Bot: ${bot.botName}`
+).join('\n') : '• No active bots ❌'}
+
 *Zoom Integration:*
 • OAuth: Configured ✅
 • Redirect URI: Configured ✅
 • API: Ready to use ✅
+• Automation: ${activeBots.length > 0 ? '✅ Active' : '❌ Inactive'}
 
 *Dashboard:* Available in web interface
   `;
@@ -1771,6 +1991,13 @@ bot.onText(/\/shutdown/, async (msg) => {
   
   try {
     const duration = Math.floor((Date.now() - session.startTime.getTime()) / 1000 / 60);
+    
+    // 🤖 Cleanup browser bots before shutdown
+    const activeBots = [...activeBrowserBots.keys()];
+    for (const meetingId of activeBots) {
+      await stopBrowserBot(meetingId);
+    }
+    
     activeSessions.delete(chatId);
     
     const lang = getUserLanguage(userId);
@@ -2174,6 +2401,177 @@ bot.onText(/\/chatwatch stop/, async (msg) => {
       ? '❌ No hay monitoreo de chat activo para detener.'
       : '❌ No active chat monitoring to stop.';
     
+    await bot.sendMessage(chatId, message);
+  }
+});
+
+// 🤖 Browser Bot Commands for Multipin Automation
+
+// Start browser bot for multipin automation
+bot.onText(/\/startbot (.+) (.+)/, async (msg, match) => {
+  const chatId = msg.chat.id;
+  const userId = msg.from.id;
+  const meetingId = match[1];
+  const meetingLink = match[2];
+  const lang = getUserLanguage(userId);
+  
+  trackCommand('/startbot', userId);
+  
+  if (!isAdmin(userId)) {
+    const message = lang === 'es'
+      ? '❌ Este comando es solo para administradores.'
+      : '❌ This command is admin-only.';
+    await bot.sendMessage(chatId, message);
+    return;
+  }
+  
+  try {
+    const accessToken = await getValidZoomToken(userId);
+    
+    // Check if browser bot is already running
+    if (activeBrowserBots.has(meetingId)) {
+      const message = lang === 'es'
+        ? `🤖 *Browser Bot Ya Activo*\n\n🆔 Reunión: \`${meetingId}\`\n🎯 Estado: Multipin automático funcionando\n\nUsa \`/stopbot ${meetingId}\` para detenerlo.`
+        : `🤖 *Browser Bot Already Active*\n\n🆔 Meeting: \`${meetingId}\`\n🎯 Status: Automatic multipin running\n\nUse \`/stopbot ${meetingId}\` to stop it.`;
+      await bot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
+      return;
+    }
+    
+    // Create meeting data object
+    const meetingData = {
+      meetingId: meetingId,
+      link: meetingLink,
+      passcode: 'No passcode required' // Can be updated if needed
+    };
+    
+    // Start browser bot
+    const browserBot = await startBrowserBot(meetingId, meetingData, accessToken);
+    
+    if (browserBot) {
+      const message = lang === 'es'
+        ? `🤖 *Browser Bot Iniciado*\n\n🆔 Reunión: \`${meetingId}\`\n🔗 Enlace: ${meetingLink}\n🎯 Estado: Multipin automático ACTIVO\n🤖 Bot: ${browserBot.botName}\n\n*Características Activas:*\n• ✅ Multipin automático por cámara + mano\n• ✅ Unpin automático tras 60s sin cámara\n• ✅ Monitoreo en tiempo real\n• ✅ Registro completo en Observatory\n\n*Para detener:* \`/stopbot ${meetingId}\``
+        : `🤖 *Browser Bot Started*\n\n🆔 Meeting: \`${meetingId}\`\n🔗 Link: ${meetingLink}\n🎯 Status: Automatic multipin ACTIVE\n🤖 Bot: ${browserBot.botName}\n\n*Active Features:*\n• ✅ Automatic multipin for camera + hand\n• ✅ Auto-unpin after 60s without camera\n• ✅ Real-time monitoring\n• ✅ Complete Observatory logging\n\n*To stop:* \`/stopbot ${meetingId}\``;
+      
+      await bot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
+      
+      // Notify Command Chat
+      await notifyCommandChat(
+        `🤖 BROWSER BOT STARTED\n🆔 Meeting: ${meetingId}\n👤 Started by: @${msg.from.username || 'admin'}\n🎯 Multipin automation: ACTIVE`,
+        meetingId
+      );
+      
+    } else {
+      const message = lang === 'es'
+        ? `❌ *Error al Iniciar Browser Bot*\n\n🆔 Reunión: \`${meetingId}\`\nNo se pudo iniciar la automatización del multipin. Verifica que:\n• El enlace de Zoom sea válido\n• La reunión esté activa\n• Tu cuenta tenga permisos de host/cohost`
+        : `❌ *Browser Bot Start Failed*\n\n🆔 Meeting: \`${meetingId}\`\nCould not start multipin automation. Check that:\n• Zoom link is valid\n• Meeting is active\n• Your account has host/cohost permissions`;
+      
+      await bot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
+    }
+    
+  } catch (error) {
+    console.error('Error starting browser bot:', error);
+    const message = lang === 'es'
+      ? '❌ Error al iniciar browser bot para automatización de multipin.'
+      : '❌ Error starting browser bot for multipin automation.';
+    await bot.sendMessage(chatId, message);
+  }
+});
+
+// Stop browser bot
+bot.onText(/\/stopbot (.+)/, async (msg, match) => {
+  const chatId = msg.chat.id;
+  const userId = msg.from.id;
+  const meetingId = match[1];
+  const lang = getUserLanguage(userId);
+  
+  trackCommand('/stopbot', userId);
+  
+  if (!isAdmin(userId)) {
+    const message = lang === 'es'
+      ? '❌ Este comando es solo para administradores.'
+      : '❌ This command is admin-only.';
+    await bot.sendMessage(chatId, message);
+    return;
+  }
+  
+  try {
+    // Check if browser bot is running
+    if (!activeBrowserBots.has(meetingId)) {
+      const message = lang === 'es'
+        ? `⚠️ *No hay Browser Bot Activo*\n\n🆔 Reunión: \`${meetingId}\`\nNo hay automatización de multipin corriendo para esta reunión.`
+        : `⚠️ *No Active Browser Bot*\n\n🆔 Meeting: \`${meetingId}\`\nNo multipin automation running for this meeting.`;
+      await bot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
+      return;
+    }
+    
+    // Stop browser bot
+    await stopBrowserBot(meetingId);
+    
+    const message = lang === 'es'
+      ? `🔚 *Browser Bot Detenido*\n\n🆔 Reunión: \`${meetingId}\`\n🎯 Estado: Multipin automático DETENIDO\n\n*Automatización finalizada:*\n• ❌ Multipin automático desactivado\n• ❌ Monitoreo de cámara detenido\n• ✅ Registros guardados en Observatory\n\nPuedes reiniciar con \`/startbot\``
+      : `🔚 *Browser Bot Stopped*\n\n🆔 Meeting: \`${meetingId}\`\n🎯 Status: Automatic multipin STOPPED\n\n*Automation ended:*\n• ❌ Automatic multipin disabled\n• ❌ Camera monitoring stopped\n• ✅ Logs saved to Observatory\n\nYou can restart with \`/startbot\``;
+    
+    await bot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
+    
+    // Notify Command Chat
+    await notifyCommandChat(
+      `🔚 BROWSER BOT STOPPED\n🆔 Meeting: ${meetingId}\n👤 Stopped by: @${msg.from.username || 'admin'}\n🎯 Multipin automation: DEACTIVATED`,
+      meetingId
+    );
+    
+  } catch (error) {
+    console.error('Error stopping browser bot:', error);
+    const message = lang === 'es'
+      ? '❌ Error al detener browser bot.'
+      : '❌ Error stopping browser bot.';
+    await bot.sendMessage(chatId, message);
+  }
+});
+
+// Browser bot status
+bot.onText(/\/botstatus$/, async (msg) => {
+  const chatId = msg.chat.id;
+  const userId = msg.from.id;
+  const lang = getUserLanguage(userId);
+  
+  trackCommand('/botstatus', userId);
+  
+  try {
+    const activeBots = [...activeBrowserBots.entries()];
+    
+    if (activeBots.length === 0) {
+      const message = lang === 'es'
+        ? `🤖 *Estado de Browser Bots*\n\n*Bots Activos:* 0\n📊 Estado: Sin automatización de multipin\n\n*Para iniciar:*\n\`/startbot [MEETING_ID] [ZOOM_LINK]\`\n\n*Ejemplo:*\n\`/startbot 123456789 https://zoom.us/j/123456789\``
+        : `🤖 *Browser Bot Status*\n\n*Active Bots:* 0\n📊 Status: No multipin automation\n\n*To start:*\n\`/startbot [MEETING_ID] [ZOOM_LINK]\`\n\n*Example:*\n\`/startbot 123456789 https://zoom.us/j/123456789\``;
+      
+      await bot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
+      return;
+    }
+    
+    let statusMessage = lang === 'es'
+      ? `🤖 *Estado de Browser Bots*\n\n*Bots Activos:* ${activeBots.length}\n\n`
+      : `🤖 *Browser Bot Status*\n\n*Active Bots:* ${activeBots.length}\n\n`;
+    
+    for (const [meetingId, bot] of activeBots) {
+      const multipinnedUsers = await bot.getMultipinnedUsers();
+      const botStatus = bot.isReady() ? '✅ ACTIVE' : '⚠️ ERROR';
+      
+      statusMessage += lang === 'es'
+        ? `*Reunión:* \`${meetingId}\`\n*Estado:* ${botStatus}\n*Bot:* ${bot.botName}\n*Usuarios multipinned:* ${multipinnedUsers.length}\n*Conectado:* ${bot.isConnected ? 'Sí' : 'No'}\n\n`
+        : `*Meeting:* \`${meetingId}\`\n*Status:* ${botStatus}\n*Bot:* ${bot.botName}\n*Multipinned users:* ${multipinnedUsers.length}\n*Connected:* ${bot.isConnected ? 'Yes' : 'No'}\n\n`;
+    }
+    
+    statusMessage += lang === 'es'
+      ? `*Comandos:*\n• \`/stopbot [MEETING_ID]\` - Detener bot específico\n• \`/startbot [MEETING_ID] [LINK]\` - Iniciar nuevo bot`
+      : `*Commands:*\n• \`/stopbot [MEETING_ID]\` - Stop specific bot\n• \`/startbot [MEETING_ID] [LINK]\` - Start new bot`;
+    
+    await bot.sendMessage(chatId, statusMessage, { parse_mode: 'Markdown' });
+    
+  } catch (error) {
+    console.error('Error getting browser bot status:', error);
+    const message = lang === 'es'
+      ? '❌ Error al obtener estado de browser bots.'
+      : '❌ Error getting browser bot status.';
     await bot.sendMessage(chatId, message);
   }
 });
@@ -2737,54 +3135,308 @@ process.on('SIGINT', () => {
   process.exit(0);
 });
 
-// Add test mode commands
-bot.onText(/\/startsession/, async (msg) => {
+// Browser Bot Command Handlers
+bot.onText(/\/startbot (.+) (.+)/, async (msg, match) => {
   const chatId = msg.chat.id;
   const userId = msg.from.id;
-  const username = msg.from.username || msg.from.first_name || 'User';
+  const meetingId = match[1];
+  const zoomLink = match[2];
+  const lang = getUserLanguage(userId);
   
-  trackCommand('/startsession', userId);
+  trackCommand('/startbot', userId);
   
   if (!isAdmin(userId)) {
-    const lang = getUserLanguage(userId);
-    const adminOnly = lang === 'es' ? '❌ Este comando es solo para administradores.' : '❌ This command is for administrators only.';
-    await bot.sendMessage(chatId, adminOnly);
+    const message = lang === 'es'
+      ? '❌ Este comando es solo para administradores.'
+      : '❌ This command is admin-only.';
+    await bot.sendMessage(chatId, message);
     return;
   }
   
-  const lang = getUserLanguage(userId);
-  const sessionMsg = lang === 'es' ? `
-🎬 **Sesión de Prueba Iniciada**
-
-✅ Sistema LA NUBE BOT activado
-🔍 Monitoreo simulado en línea
-📊 Dashboard funcionando
-⚡ Modo multipin disponible
-
-**Comandos disponibles:**
-• /scanroom - Escanear participantes
-• /status - Estado del sistema
-• /shutdown - Finalizar sesión
-
-*Sesión iniciada: ${new Date().toLocaleString('es-ES')}*` : `
-🎬 **Test Session Started**
-
-✅ LA NUBE BOT system activated
-🔍 Simulated monitoring online
-📊 Dashboard operational
-⚡ Multipin mode available
-
-**Available commands:**
-• /scanroom - Scan participants
-• /status - System status
-• /shutdown - End session
-
-*Session started: ${new Date().toLocaleString('en-US')}*`;
-
-  await bot.sendMessage(chatId, sessionMsg, { parse_mode: 'Markdown' });
-  await logToObservatory(`🎬 Sesión de prueba iniciada por @${username}`, userId);
+  try {
+    const accessToken = await getValidZoomToken(userId);
+    
+    const meetingData = {
+      meetingId: meetingId,
+      link: zoomLink,
+      passcode: 'No passcode required'
+    };
+    
+    const browserBot = await startBrowserBot(meetingId, meetingData, accessToken);
+    
+    if (browserBot) {
+      const message = lang === 'es'
+        ? `🤖 *Browser Bot Iniciado*\n\n✅ Bot activo para reunión: \`${meetingId}\`\n🎯 Multipin automático: ACTIVO\n🔄 Monitoreando cámara + mano levantada\n\n*El bot manejará automáticamente:*\n• ✅ Multipin para usuarios con cámara ON + mano\n• ⏰ Unpin tras 60s sin cámara\n• 📝 Registro completo en Observatory`
+        : `🤖 *Browser Bot Started*\n\n✅ Bot active for meeting: \`${meetingId}\`\n🎯 Automatic multipin: ACTIVE\n🔄 Monitoring camera + hand raised\n\n*Bot will automatically handle:*\n• ✅ Multipin for users with camera ON + hand\n• ⏰ Unpin after 60s without camera\n• 📝 Complete Observatory logging`;
+        
+      await bot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
+    } else {
+      const message = lang === 'es'
+        ? '❌ Error iniciando browser bot. Verifica el enlace de Zoom.'
+        : '❌ Error starting browser bot. Check the Zoom link.';
+      await bot.sendMessage(chatId, message);
+    }
+  } catch (error) {
+    console.error('Error starting browser bot:', error);
+    const message = lang === 'es'
+      ? '❌ Error iniciando browser bot.'
+      : '❌ Error starting browser bot.';
+    await bot.sendMessage(chatId, message);
+  }
 });
 
+bot.onText(/\/stopbot (.+)/, async (msg, match) => {
+  const chatId = msg.chat.id;
+  const userId = msg.from.id;
+  const meetingId = match[1];
+  const lang = getUserLanguage(userId);
+  
+  trackCommand('/stopbot', userId);
+  
+  if (!isAdmin(userId)) {
+    const message = lang === 'es'
+      ? '❌ Este comando es solo para administradores.'
+      : '❌ This command is admin-only.';
+    await bot.sendMessage(chatId, message);
+    return;
+  }
+  
+  try {
+    await stopBrowserBot(meetingId);
+    
+    const message = lang === 'es'
+      ? `🔚 *Browser Bot Detenido*\n\n✅ Bot detenido para reunión: \`${meetingId}\`\n❌ Multipin automático: DESACTIVADO\n🧹 Recursos limpiados exitosamente`
+      : `🔚 *Browser Bot Stopped*\n\n✅ Bot stopped for meeting: \`${meetingId}\`\n❌ Automatic multipin: DEACTIVATED\n🧹 Resources cleaned up successfully`;
+      
+    await bot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
+  } catch (error) {
+    console.error('Error stopping browser bot:', error);
+    const message = lang === 'es'
+      ? '❌ Error deteniendo browser bot.'
+      : '❌ Error stopping browser bot.';
+    await bot.sendMessage(chatId, message);
+  }
+});
+
+bot.onText(/\/botstatus/, async (msg) => {
+  const chatId = msg.chat.id;
+  const userId = msg.from.id;
+  const lang = getUserLanguage(userId);
+  
+  trackCommand('/botstatus', userId);
+  
+  const activeBots = [...activeBrowserBots.entries()];
+  
+  if (activeBots.length === 0) {
+    const message = lang === 'es'
+      ? '📊 *Estado Browser Bots*\n\n❌ No hay browser bots activos\n\nUsa `/startbot [meeting_id] [zoom_link]` para iniciar uno.'
+      : '📊 *Browser Bots Status*\n\n❌ No active browser bots\n\nUse `/startbot [meeting_id] [zoom_link]` to start one.';
+    await bot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
+    return;
+  }
+  
+  const botList = activeBots.map(([meetingId, bot]) => {
+    const status = bot.isReady() ? '✅ Activo' : '⚠️ Error';
+    const statusEn = bot.isReady() ? '✅ Active' : '⚠️ Error';
+    return lang === 'es' 
+      ? `• Reunión: \`${meetingId}\`\n  Estado: ${status}\n  Bot: ${bot.botName}\n  Conectado: ${bot.isConnected ? 'Sí' : 'No'}`
+      : `• Meeting: \`${meetingId}\`\n  Status: ${statusEn}\n  Bot: ${bot.botName}\n  Connected: ${bot.isConnected ? 'Yes' : 'No'}`;
+  }).join('\n\n');
+  
+  const message = lang === 'es'
+    ? `📊 *Estado Browser Bots*\n\n🤖 Bots activos: ${activeBots.length}\n\n${botList}\n\n*Comandos:*\n• \`/stopbot [meeting_id]\` - Detener bot específico`
+    : `📊 *Browser Bots Status*\n\n🤖 Active bots: ${activeBots.length}\n\n${botList}\n\n*Commands:*\n• \`/stopbot [meeting_id]\` - Stop specific bot`;
+    
+  await bot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
+});
+
+// Browser bot help commands
+bot.onText(/\/startbot$/, async (msg) => {
+  const chatId = msg.chat.id;
+  const userId = msg.from.id;
+  const lang = getUserLanguage(userId);
+  
+  const message = lang === 'es'
+    ? `📝 *Uso del comando /startbot*
+
+*Iniciar browser bot para automatización:*
+\`/startbot [ID_REUNION] [ENLACE_ZOOM]\`
+
+*Ejemplo:*
+\`/startbot 123456789 https://zoom.us/j/123456789\`
+
+*Automatización Incluida:*
+• 🎯 Multipin automático (cámara ON + mano levantada)
+• ⏰ Unpin automático tras 60s sin cámara
+• 🔄 Monitoreo continuo en tiempo real
+• 📝 Registro completo en Observatory
+• 🤖 Navegador headless con Puppeteer
+
+*Requisitos:*
+• ✅ Permisos de administrador
+• ✅ Cuenta Zoom conectada
+• ✅ Reunión activa
+
+*Otros comandos:*
+• \`/stopbot [ID_REUNION]\` - Detener bot
+• \`/botstatus\` - Ver estado de todos los bots`
+    : `📝 *How to use /startbot*
+
+*Start browser bot for automation:*
+\`/startbot [MEETING_ID] [ZOOM_LINK]\`
+
+*Example:*
+\`/startbot 123456789 https://zoom.us/j/123456789\`
+
+*Included Automation:*
+• 🎯 Automatic multipin (camera ON + hand raised)
+• ⏰ Auto-unpin after 60s without camera
+• 🔄 Continuous real-time monitoring
+• 📝 Complete Observatory logging
+• 🤖 Headless browser with Puppeteer
+
+*Requirements:*
+• ✅ Administrator permissions
+• ✅ Zoom account connected
+• ✅ Active meeting
+
+*Other commands:*
+• \`/stopbot [MEETING_ID]\` - Stop bot
+• \`/botstatus\` - View all bot status`;
+  
+  await bot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
+});
+
+bot.onText(/\/stopbot$/, async (msg) => {
+  const chatId = msg.chat.id;
+  const userId = msg.from.id;
+  const lang = getUserLanguage(userId);
+  
+  const message = lang === 'es'
+    ? `📝 *Uso del comando /stopbot*
+
+*Detener browser bot específico:*
+\`/stopbot [ID_REUNION]\`
+
+*Ejemplo:*
+\`/stopbot 123456789\`
+
+*Al detener se:*
+• 🔚 Cierra navegador automáticamente
+• 📊 Guarda logs en Observatory
+• 🧹 Limpia recursos del sistema
+• ❌ Desactiva multipin automático
+
+*Ver bots activos:*
+\`/botstatus\` - Lista todos los bots corriendo
+
+*Nota:* Solo administradores pueden usar este comando.`
+    : `📝 *How to use /stopbot*
+
+*Stop specific browser bot:*
+\`/stopbot [MEETING_ID]\`
+
+*Example:*
+\`/stopbot 123456789\`
+
+*When stopping:*
+• 🔚 Closes browser automatically
+• 📊 Saves logs to Observatory
+• 🧹 Cleans up system resources
+• ❌ Disables automatic multipin
+
+*View active bots:*
+\`/botstatus\` - Lists all running bots
+
+*Note:* Only administrators can use this command.`;
+  
+  await bot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
+});
+
+// Documentation command
+bot.onText(/\/docs(.*)/, async (msg, match) => {
+  const chatId = msg.chat.id;
+  const userId = msg.from.id;
+  const docType = match[1].trim();
+  
+  trackCommand('/docs', userId);
+  
+  const lang = getUserLanguage(userId);
+  
+  // Base GitHub URLs for documentation
+  const baseUrl = 'https://github.com/PupFr/Nebulosa/blob/main/docs/';
+  const docs = {
+    setup: `${baseUrl}setup-guide.md`,
+    oauth: `${baseUrl}github-oauth-setup.md`,
+    multipin: `${baseUrl}multipin-automation.md`,
+    shortio: `${baseUrl}shortio-setup.md`,
+    all: 'https://github.com/PupFr/Nebulosa/tree/main/docs'
+  };
+  
+  try {
+    let message, targetUrl;
+    
+    if (docType === 'setup' || docType === 'configuracion') {
+      targetUrl = docs.setup;
+      message = lang === 'es' 
+        ? '📋 **Guía de Configuración**\n\nAccede a la documentación completa de configuración:'
+        : '📋 **Setup Guide**\n\nAccess the complete setup documentation:';
+    } else if (docType === 'oauth') {
+      targetUrl = docs.oauth;
+      message = lang === 'es'
+        ? '🔐 **Configuración OAuth**\n\nGuía para configurar OAuth con GitHub:'
+        : '🔐 **OAuth Setup**\n\nGuide to configure OAuth with GitHub:';
+    } else if (docType === 'multipin') {
+      targetUrl = docs.multipin;
+      message = lang === 'es'
+        ? '📌 **Automatización Multipin**\n\nDocumentación del sistema de multipin automático:'
+        : '📌 **Multipin Automation**\n\nAutomatic multipin system documentation:';
+    } else if (docType === 'shortio') {
+      targetUrl = docs.shortio;
+      message = lang === 'es'
+        ? '🔗 **Configuración Short.io**\n\nGuía para configurar enlaces cortos:'
+        : '🔗 **Short.io Setup**\n\nGuide to configure short links:';
+    } else {
+      // Show all documentation
+      targetUrl = docs.all;
+      message = lang === 'es'
+        ? `📚 **Documentación Completa**
+
+🔗 **Enlaces de documentación disponibles:**
+
+📋 \`/docs setup\` - Guía de configuración
+🔐 \`/docs oauth\` - Configuración OAuth  
+📌 \`/docs multipin\` - Automatización multipin
+🔗 \`/docs shortio\` - Configuración Short.io
+
+📖 **Documentación completa en GitHub:**`
+        : `📚 **Complete Documentation**
+
+🔗 **Available documentation links:**
+
+📋 \`/docs setup\` - Setup guide
+🔐 \`/docs oauth\` - OAuth configuration
+📌 \`/docs multipin\` - Multipin automation  
+🔗 \`/docs shortio\` - Short.io setup
+
+📖 **Complete documentation on GitHub:**`;
+    }
+    
+    // Use GitHub URL directly (no shortening for docs)
+    message += `\n\n🌐 ${targetUrl}`;
+    
+    await bot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
+    
+  } catch (error) {
+    console.error('Error in /docs command:', error);
+    const errorMsg = lang === 'es'
+      ? '❌ Error al generar enlace de documentación. Intenta más tarde.'
+      : '❌ Error generating documentation link. Try again later.';
+    await bot.sendMessage(chatId, errorMsg);
+  }
+});
+
+// Add test mode commands
 console.log('🤖 La NUBE BOT iniciado y escuchando comandos...');
 
 module.exports = { bot, handleZoomAuthSuccess, botMetrics, activeSessions };

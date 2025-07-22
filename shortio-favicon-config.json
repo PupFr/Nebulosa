@@ -1,0 +1,24 @@
+{
+  "domain": "pupfrisky.com",
+  "result": {
+    "originalURL": "https://pupfrisky.com",
+    "path": "u0ZwXM",
+    "idString": "lnk_5VyJ_jVEvEMXwHNcqAmnCpKMeG",
+    "id": "lnk_5VyJ_jVEvEMXwHNcqAmnCpKMeG",
+    "shortURL": "https://Pupfrisky.com/u0ZwXM",
+    "secureShortURL": "https://Pupfrisky.com/u0ZwXM",
+    "cloaking": false,
+    "title": "PupFrisky Domain",
+    "tags": [],
+    "createdAt": "2025-07-22T20:38:48.963Z",
+    "skipQS": false,
+    "archived": false,
+    "DomainId": 1412901,
+    "OwnerId": 1792479,
+    "hasPassword": false,
+    "source": "api",
+    "success": true,
+    "duplicate": false
+  },
+  "configured_at": "2025-07-22T20:38:48.923Z"
+}

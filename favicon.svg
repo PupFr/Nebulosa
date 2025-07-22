@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="cloudGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="botGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2ecc71;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#27ae60;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Cloud background -->
+  <path d="M50 28c0-8.8-7.2-16-16-16s-16 7.2-16 16c0 1.6 0.2 3.1 0.7 4.6C15.2 33.9 12 37.7 12 42c0 5.5 4.5 10 10 10h26c6.6 0 12-5.4 12-12C60 34.5 55.5 29.2 50 28z" fill="url(#cloudGradient)" opacity="0.9"/>
+  
+  <!-- Robot head -->
+  <circle cx="32" cy="30" r="8" fill="url(#botGradient)"/>
+  
+  <!-- Robot eyes -->
+  <circle cx="29" cy="28" r="1.5" fill="#fff"/>
+  <circle cx="35" cy="28" r="1.5" fill="#fff"/>
+  
+  <!-- Robot mouth -->
+  <rect x="30" y="32" width="4" height="1" rx="0.5" fill="#fff"/>
+  
+  <!-- Robot antenna -->
+  <line x1="32" y1="22" x2="32" y2="18" stroke="#f39c12" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="32" cy="18" r="1" fill="#f39c12"/>
+  
+  <!-- Zoom icon -->
+  <rect x="42" y="38" width="8" height="6" rx="1" fill="#3498db" opacity="0.8"/>
+  <circle cx="44" cy="40" r="0.8" fill="#fff"/>
+  <circle cx="48" cy="40" r="0.8" fill="#fff"/>
+  <circle cx="44" cy="42" r="0.8" fill="#fff"/>
+  <circle cx="48" cy="42" r="0.8" fill="#fff"/>
+</svg>

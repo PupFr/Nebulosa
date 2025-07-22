@@ -1,0 +1,35 @@
+{
+  "created_at": "2025-07-22T21:02:17.373Z",
+  "working_links": [
+    {
+      "success": true,
+      "slug": "zoom-oauth-callback",
+      "shortUrl": "https://Pupfrisky.com/zoom-oauth-callback",
+      "linkId": "lnk_5VyJ_TfehosMuoPXeYUV3vAaOI",
+      "originalUrl": "https://pupfrisky.com/zoom-callback.php"
+    },
+    {
+      "success": true,
+      "slug": "bot-oauth-redirect",
+      "shortUrl": "https://Pupfrisky.com/bot-oauth-redirect",
+      "linkId": "lnk_5VyJ_gilK6ZOfHGVya7bEKrZbK",
+      "originalUrl": "https://pupfrisky.com/zoom-callback.php"
+    },
+    {
+      "success": true,
+      "slug": "lanube-oauth",
+      "shortUrl": "https://Pupfrisky.com/lanube-oauth",
+      "linkId": "lnk_5VyJ_JB3pGOM8JkwURS9nkimlt",
+      "originalUrl": "https://pupfrisky.com/zoom-callback.php"
+    },
+    {
+      "success": true,
+      "slug": "oauth2024",
+      "shortUrl": "https://Pupfrisky.com/oauth2024",
+      "linkId": "lnk_5VyJ_IXesR87Erh3TDzmL1JYgl",
+      "originalUrl": "https://pupfrisky.com/zoom-callback.php"
+    }
+  ],
+  "total_created": 4,
+  "total_working": 4
+}

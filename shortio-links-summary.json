@@ -1,0 +1,117 @@
+{
+  "created_at": "2025-07-22T20:52:50.271Z",
+  "domain": "pupfrisky.com",
+  "total_links": 9,
+  "successful": 7,
+  "duplicates": 2,
+  "errors": 0,
+  "links": [
+    {
+      "success": false,
+      "reason": "duplicate",
+      "slug": "docs"
+    },
+    {
+      "success": true,
+      "slug": "setup",
+      "shortUrl": "https://Pupfrisky.com/setup",
+      "originalUrl": "https://pupfrisky.com/docs-setup.html",
+      "title": "⚙️ Configuración Inicial - LA NUBE BOT",
+      "tags": [
+        "docs",
+        "setup",
+        "instalacion"
+      ],
+      "linkId": "lnk_5VyJ_07DI9kdo50aYGrGOAG9PU"
+    },
+    {
+      "success": false,
+      "reason": "duplicate",
+      "slug": "oauth"
+    },
+    {
+      "success": true,
+      "slug": "oauth-docs",
+      "shortUrl": "https://Pupfrisky.com/oauth-docs",
+      "originalUrl": "https://pupfrisky.com/docs-oauth.html",
+      "title": "📖 OAuth Zoom Docs - LA NUBE BOT",
+      "tags": [
+        "docs",
+        "oauth",
+        "zoom",
+        "documentation"
+      ],
+      "linkId": "lnk_5VyJ_aEfvOKEPgwn78WZW3FvrJ"
+    },
+    {
+      "success": true,
+      "slug": "multipin",
+      "shortUrl": "https://Pupfrisky.com/multipin",
+      "originalUrl": "https://pupfrisky.com/docs-multipin.html",
+      "title": "📌 Multipin Automation - LA NUBE BOT",
+      "tags": [
+        "docs",
+        "multipin",
+        "automation",
+        "puppeteer"
+      ],
+      "linkId": "lnk_5VyJ_SN75biieEyruMtC2sBfy4"
+    },
+    {
+      "success": true,
+      "slug": "shortio",
+      "shortUrl": "https://Pupfrisky.com/shortio",
+      "originalUrl": "https://pupfrisky.com/docs-shortio.html",
+      "title": "🔗 Short.io Integration - LA NUBE BOT",
+      "tags": [
+        "docs",
+        "shortio",
+        "links",
+        "urls"
+      ],
+      "linkId": "lnk_5VyJ_w9CFButtn9I91ep5hlM0z"
+    },
+    {
+      "success": true,
+      "slug": "zoom-callback",
+      "shortUrl": "https://Pupfrisky.com/zoom-callback",
+      "originalUrl": "https://pupfrisky.com/zoom-callback.php",
+      "title": "🔗 Zoom OAuth Callback - LA NUBE BOT",
+      "tags": [
+        "oauth",
+        "zoom",
+        "callback",
+        "auth"
+      ],
+      "linkId": "lnk_5VyJ_3SvouneBEdcGGkkuvS4p9"
+    },
+    {
+      "success": true,
+      "slug": "bot-help",
+      "shortUrl": "https://Pupfrisky.com/bot-help",
+      "originalUrl": "https://pupfrisky.com/docs-index.html#comandos",
+      "title": "❓ Ayuda del Bot - LA NUBE BOT",
+      "tags": [
+        "help",
+        "comandos",
+        "bot",
+        "ayuda"
+      ],
+      "linkId": "lnk_5VyJ_LZr60Y6En1QnssBuyqNUl"
+    },
+    {
+      "success": true,
+      "slug": "github",
+      "shortUrl": "https://Pupfrisky.com/github",
+      "originalUrl": "https://github.com/PupFr/Nebulosa",
+      "title": "💻 Código Fuente - LA NUBE BOT",
+      "tags": [
+        "github",
+        "codigo",
+        "source",
+        "desarrollo"
+      ],
+      "linkId": "lnk_5VyJ_GGn7dhH4IWtkStrLrDIQ7"
+    }
+  ]
+}
