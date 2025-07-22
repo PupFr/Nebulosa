@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📌 Multipin Automation - LA NUBE BOT</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAANKSURBVFhH7ZdNaBNBFMdnk7RJ06SNH61WW1uxVkSxKFgQD4IHL148ePHgwYMHL168ePDgwYMHL168ePDgwYMHL168ePDgwYMFL168ePDgwYMXL168ePDgwYMXDx68eO/N7CbZZJNsNpvdSWYevPn95v0z782bnQH+U/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8A==">
+    <meta name="description" content="Automatización de multipin para reuniones Zoom - Control avanzado de participantes con LA NUBE BOT">
+    <meta name="keywords" content="Zoom multipin, meeting automation, participant control, Puppeteer automation">
+    <meta name="author" content="PupFr">
+    <meta name="theme-color" content="#667eea">
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; 
+            line-height: 1.6; margin: 0; padding: 20px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; min-height: 100vh;
+        }
+        .container { 
+            max-width: 900px; margin: 0 auto; 
+            background: rgba(255,255,255,0.1); padding: 40px; 
+            border-radius: 20px; backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .header {
+            text-align: center; margin-bottom: 40px;
+            border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 20px;
+        }
+        h1 { font-size: 3em; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .subtitle { margin-top: 10px; font-size: 1.2em; opacity: 0.9; }
+        h2 { 
+            color: #f39c12; margin-top: 30px; 
+            border-left: 4px solid #f39c12; padding-left: 15px;
+        }
+        h3 { color: #2ecc71; margin-top: 25px; }
+        .feature-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px; margin: 30px 0;
+        }
+        .feature-card { 
+            background: rgba(255,255,255,0.15); padding: 25px; 
+            border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);
+        }
+        .feature-card h3 { margin-top: 0; color: #3498db; }
+        .command-box { 
+            background: rgba(0,0,0,0.3); color: #00ff88; padding: 20px; 
+            border-radius: 10px; font-family: 'Monaco', monospace; 
+            margin: 15px 0; overflow-x: auto;
+        }
+        .example { 
+            background: rgba(52, 152, 219, 0.2); padding: 15px; 
+            border-radius: 8px; margin: 15px 0; border-left: 4px solid #3498db;
+        }
+        .important { 
+            background: rgba(241, 196, 15, 0.2); padding: 15px; 
+            border-radius: 8px; margin: 15px 0; border-left: 4px solid #f1c40f;
+        }
+        .success { 
+            background: rgba(46, 204, 113, 0.2); padding: 15px; 
+            border-radius: 8px; margin: 15px 0; border-left: 4px solid #2ecc71;
+        }
+        ul li { margin: 8px 0; }
+        .workflow-step {
+            background: rgba(255,255,255,0.1); padding: 20px; margin: 15px 0;
+            border-radius: 10px; border-left: 4px solid #e74c3c;
+        }
+        .nav-links {
+            text-align: center; margin-top: 40px; padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.3);
+        }
+        .nav-links a {
+            display: inline-block; margin: 0 15px; padding: 12px 25px;
+            background: rgba(255,255,255,0.2); color: white; border-radius: 25px;
+            text-decoration: none; transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .nav-links a:hover { 
+            background: rgba(255,255,255,0.3); 
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📌 Multipin Automation</h1>
+            <p class="subtitle">Sistema de automatización multipin con Puppeteer para reuniones Zoom</p>
+        </div>
+
+        <h2>🎯 Características Principales</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>📹 Camera + Hand Raise</h3>
+                <p>Los usuarios deben tener <strong>cámara encendida Y mano levantada</strong> para recibir acceso multipin automático.</p>
+            </div>
+            <div class="feature-card">
+                <h3>⏰ Timer de 60 Segundos</h3>
+                <p>Unpin automático después de 60 segundos con cámara apagada. Protege contra multipin accidental.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🔄 Restauración Instantánea</h3>
+                <p>Cámara encendida + mano levantada = restauración inmediata del multipin.</p>
+            </div>
+            <div class="feature-card">
+                <h3>📊 Monitoreo en Tiempo Real</h3>
+                <p>Seguimiento continuo del estado de participantes con logging completo.</p>
+            </div>
+        </div>
+
+        <h2>🤖 Comandos de Automatización</h2>
+
+        <div class="workflow-step">
+            <h3>/startbot [MEETING_ID] [ZOOM_LINK]</h3>
+            <p>Inicia el bot navegador para gestión automática de multipin.</p>
+            <div class="command-box">
+/startbot 123456789 https://zoom.us/j/123456789
+            </div>
+            <div class="success">
+                <strong>Características:</strong>
+                <ul>
+                    <li>✅ Multipin automático para cámara ON + mano levantada</li>
+                    <li>⏰ Auto-unpin después de 60s sin cámara</li>
+                    <li>🔄 Monitoreo continuo en tiempo real</li>
+                    <li>📝 Logging completo al Observatory</li>
+                    <li>🤖 Navegador headless con Puppeteer</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="workflow-step">
+            <h3>/stopbot [MEETING_ID]</h3>
+            <p>Detiene la automatización del bot navegador para una reunión específica.</p>
+            <div class="command-box">
+/stopbot 123456789
+            </div>
+        </div>
+
+        <div class="workflow-step">
+            <h3>/botstatus</h3>
+            <p>Ver estado de todos los bots navegador activos.</p>
+            <div class="example">
+                <strong>Muestra:</strong>
+                <ul>
+                    <li>Número de bots activos</li>
+                    <li>IDs de reuniones siendo monitoreadas</li>
+                    <li>Estado de cada automatización</li>
+                    <li>Tiempo de actividad</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>⚡ Flujo de Trabajo de Multipin</h2>
+
+        <div class="workflow-step">
+            <h3>1. Detección de Participantes</h3>
+            <p>El sistema monitorea continuamente:</p>
+            <ul>
+                <li>📹 Estado de cámara (ON/OFF)</li>
+                <li>✋ Estado de mano levantada</li>
+                <li>🎤 Estado de micrófono</li>
+                <li>👥 Lista de participantes activos</li>
+            </ul>
+        </div>
+
+        <div class="workflow-step">
+            <h3>2. Lógica de Multipin</h3>
+            <div class="important">
+                <strong>Condiciones para Multipin:</strong>
+                <ul>
+                    <li>✅ Cámara debe estar ENCENDIDA</li>
+                    <li>✅ Mano debe estar LEVANTADA</li>
+                    <li>✅ Usuario no debe estar ya en multipin</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="workflow-step">
+            <h3>3. Sistema de Timer</h3>
+            <p>Control automático de tiempo:</p>
+            <ul>
+                <li>⏰ Inicia timer de 60s cuando cámara se apaga</li>
+                <li>🔄 Cancela timer si cámara se enciende antes de 60s</li>
+                <li>❌ Ejecuta unpin automático al completar 60s</li>
+                <li>📝 Registra todas las acciones en Observatory</li>
+            </ul>
+        </div>
+
+        <h2>🔧 Configuración Técnica</h2>
+
+        <div class="feature-card">
+            <h3>Puppeteer Settings</h3>
+            <div class="command-box">
+// Configuración del navegador
+const browser = await puppeteer.launch({
+  headless: true,
+  args: ['--no-sandbox', '--disable-setuid-sandbox']
+});
+            </div>
+        </div>
+
+        <div class="important">
+            <strong>⚠️ Requisitos del Sistema:</strong>
+            <ul>
+                <li>Node.js 14+ con Puppeteer instalado</li>
+                <li>Acceso a reunión Zoom como host/cohost</li>
+                <li>Configuración OAuth completa</li>
+                <li>Variables de entorno configuradas</li>
+            </ul>
+        </div>
+
+        <div class="success">
+            <strong>✅ Beneficios:</strong>
+            <ul>
+                <li>🎯 Multipin preciso basado en participación real</li>
+                <li>⚡ Respuesta instantánea a cambios de estado</li>
+                <li>📊 Monitoreo completo y transparente</li>
+                <li>🤖 Automatización completa sin intervención manual</li>
+            </ul>
+        </div>
+
+        <div class="nav-links">
+            <a href="/docs-setup.html">🔧 Setup Guide</a>
+            <a href="/docs-oauth.html">🔐 OAuth Setup</a>
+            <a href="/docs-shortio.html">🔗 Short.io Setup</a>
+            <a href="https://github.com/PupFr/Nebulosa" target="_blank">📂 GitHub Repository</a>
+        </div>
+    </div>
+</body>
+</html>

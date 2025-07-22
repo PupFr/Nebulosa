@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+        <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚙️ Configuración Inicial - LA NUBE BOT</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAANKSURBVFhH7ZdNaBNBFMdnk7RJ06SNH61WW1uxVkSxKFgQD4IHL148ePHgwYMHL168ePDgwYMHL168ePDgwYMHL168ePDgwYMFL168ePDgwYMXL168ePDgwYMXDx68eO/N7CbZZJNsNpvdSWYevPn95v0z782bnQH+U/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8A==">
+    <meta name="description" content="Guía paso a paso para configurar LA NUBE BOT de Telegram para automatización de reuniones Zoom">
+    <meta name="keywords" content="Telegram bot setup, Zoom automation, bot configuration, installation guide">
+    <meta name="author" content="PupFr">
+    <meta name="theme-color" content="#667eea">
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; 
+            line-height: 1.6; margin: 0; padding: 20px; 
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); 
+            color: #333; min-height: 100vh;
+        }
+        .container { 
+            max-width: 800px; margin: 0 auto; 
+            background: white; padding: 40px; 
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center; margin-bottom: 40px;
+            border-bottom: 2px solid #667eea; padding-bottom: 20px;
+        }
+        h1 { color: #667eea; font-size: 2.5em; margin: 0; }
+        .subtitle { color: #666; margin-top: 10px; font-size: 1.1em; }
+        h2 { color: #764ba2; border-left: 4px solid #667eea; padding-left: 15px; }
+        .step { 
+            background: #f8f9ff; padding: 20px; margin: 20px 0; 
+            border-radius: 10px; border-left: 4px solid #667eea;
+        }
+        .code { 
+            background: #2d3748; color: #e2e8f0; padding: 15px; 
+            border-radius: 8px; font-family: 'Monaco', monospace; 
+            overflow-x: auto; margin: 10px 0;
+        }
+        .important { 
+            background: #fff3cd; border: 1px solid #ffeaa7; 
+            padding: 15px; border-radius: 8px; margin: 15px 0;
+        }
+        .success { 
+            background: #d4edda; border: 1px solid #c3e6cb; 
+            padding: 15px; border-radius: 8px; margin: 15px 0;
+        }
+        ul li { margin: 8px 0; }
+        a { color: #667eea; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .nav-links {
+            text-align: center; margin-top: 40px; padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .nav-links a {
+            display: inline-block; margin: 0 15px; padding: 10px 20px;
+            background: #667eea; color: white; border-radius: 5px;
+            text-decoration: none; transition: background 0.3s;
+        }
+        .nav-links a:hover { background: #764ba2; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Setup Guide</h1>
+            <p class="subtitle">Guía de configuración inicial para LA NUBE BOT</p>
+        </div>
+
+        <div class="step">
+            <h2>📋 Paso 1: Configuración GitHub Repository</h2>
+            <p>Configura tu repositorio para GitHub Pages:</p>
+            <ol>
+                <li>Ve a <a href="https://github.com/PupFr/Nebulosa" target="_blank">https://github.com/PupFr/Nebulosa</a></li>
+                <li>Click "Add file" → "Create new file"</li>
+                <li>Nombra el archivo: <code>index.html</code></li>
+                <li>Copia el contenido del archivo de callback OAuth</li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <h2>⚙️ Paso 2: Habilitar GitHub Pages</h2>
+            <ol>
+                <li>Ve a <code>Settings</code> → <code>Pages</code> en tu repositorio</li>
+                <li>Bajo "Source", selecciona "Deploy from a branch"</li>
+                <li>Branch: <code>main</code></li>
+                <li>Folder: <code>/ (root)</code></li>
+                <li>Click "Save"</li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <h2>🔐 Paso 3: Configurar Zoom App</h2>
+            <ol>
+                <li>Ve a <a href="https://marketplace.zoom.us/develop/apps" target="_blank">Zoom Marketplace</a></li>
+                <li>Encuentra tu app con Client ID: <code>K3t8Sd3rSZOSKfkyMftDXg</code></li>
+                <li>Ve a la sección "OAuth"</li>
+                <li>Actualiza "OAuth Redirect URL" a: <code>https://pupfrisky.com/zoom-callback</code></li>
+                <li>Guarda los cambios</li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <h2>🌐 Paso 4: Variables de Entorno</h2>
+            <p>Configura las siguientes variables:</p>
+            <div class="code">
+ZOOM_REDIRECT_URI=https://pupfrisky.com/zoom-callback
+ZOOM_CLIENT_ID=K3t8Sd3rSZOSKfkyMftDXg
+ZOOM_CLIENT_SECRET=tu_client_secret_aqui
+            </div>
+        </div>
+
+        <div class="success">
+            <h3>✅ Testing</h3>
+            <p>Después de completar todos los pasos:</p>
+            <ul>
+                <li>Usa el comando <code>/zoomlogin</code> en tu bot</li>
+                <li>Click en el enlace OAuth</li>
+                <li>Verifica que la redirección funcione correctamente</li>
+                <li>OAuth debe completarse exitosamente</li>
+            </ul>
+        </div>
+
+        <div class="nav-links">
+            <a href="/docs-oauth.html">🔐 OAuth Setup</a>
+            <a href="/docs-multipin.html">📌 Multipin Automation</a>
+            <a href="/docs-shortio.html">🔗 Short.io Setup</a>
+            <a href="https://github.com/PupFr/Nebulosa" target="_blank">📂 GitHub Repository</a>
+        </div>
+    </div>
+</body>
+</html>

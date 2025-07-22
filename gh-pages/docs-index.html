@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 LA NUBE BOT - Documentación</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAANKSURBVFhH7ZdNaBNBFMdnk7RJ06SNH61WW1uxVkSxKFgQD4IHL148ePHgwYMHL168ePDgwYMHL168ePDgwYMHL168ePDgwYMHL168ePDgwYMHL168ePDgwYMHL168ePDgwYMXDx68eO/N7CbZZJNsNpvdSWYevPn95v0z782bnQH+U/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8A==">
+    <meta name="description" content="Documentación completa para LA NUBE BOT - Bot de Telegram para automatización de reuniones Zoom">
+    <meta name="keywords" content="Telegram bot, Zoom automation, multipin, OAuth, documentation">
+    <meta name="author" content="PupFr">
+    <meta name="theme-color" content="#667eea">
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; 
+            line-height: 1.6; margin: 0; padding: 20px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; min-height: 100vh;
+        }
+        .container { 
+            max-width: 1000px; margin: 0 auto; 
+            background: rgba(255,255,255,0.1); padding: 40px; 
+            border-radius: 20px; backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .header {
+            text-align: center; margin-bottom: 50px;
+            border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 30px;
+        }
+        h1 { font-size: 3.5em; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .subtitle { margin-top: 15px; font-size: 1.3em; opacity: 0.9; }
+        .docs-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px; margin: 40px 0;
+        }
+        .doc-card { 
+            background: rgba(255,255,255,0.15); padding: 30px; 
+            border-radius: 20px; border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease; cursor: pointer;
+            text-decoration: none; color: white;
+        }
+        .doc-card:hover { 
+            transform: translateY(-5px); 
+            background: rgba(255,255,255,0.2);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+        .doc-icon { font-size: 3em; margin-bottom: 20px; display: block; }
+        .doc-title { font-size: 1.5em; font-weight: bold; margin-bottom: 15px; }
+        .doc-description { opacity: 0.9; margin-bottom: 20px; }
+        .doc-features { list-style: none; padding: 0; }
+        .doc-features li { 
+            margin: 8px 0; padding-left: 20px; 
+            position: relative;
+        }
+        .doc-features li::before {
+            content: "✅"; position: absolute; left: 0;
+        }
+        .quick-links {
+            background: rgba(255,255,255,0.1); padding: 30px;
+            border-radius: 15px; margin: 40px 0;
+        }
+        .link-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px; margin-top: 20px;
+        }
+        .quick-link {
+            background: rgba(255,255,255,0.2); padding: 15px;
+            border-radius: 10px; text-align: center;
+            text-decoration: none; color: white;
+            transition: all 0.3s;
+        }
+        .quick-link:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+        .bot-info {
+            background: rgba(46, 204, 113, 0.2); padding: 25px;
+            border-radius: 15px; margin: 30px 0;
+            border-left: 5px solid #2ecc71;
+        }
+        .github-link {
+            text-align: center; margin-top: 40px;
+        }
+        .github-link a {
+            display: inline-block; background: #333; color: white;
+            padding: 15px 30px; border-radius: 25px; text-decoration: none;
+            font-weight: bold; transition: all 0.3s;
+        }
+        .github-link a:hover {
+            background: #555; transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 LA NUBE BOT</h1>
+            <p class="subtitle">Documentación completa para automatización de reuniones Zoom</p>
+        </div>
+
+        <div class="bot-info">
+            <h2 style="margin-top: 0; color: #2ecc71;">🤖 Acerca de LA NUBE BOT</h2>
+            <p>Bot de Telegram avanzado para automatización completa de reuniones Zoom con sistema de multipin inteligente, monitoreo en tiempo real y gestión automática de participantes.</p>
+            <ul style="margin: 0;">
+                <li>✅ <strong>Automatización multipin</strong> basada en cámara + mano levantada</li>
+                <li>✅ <strong>Integración OAuth</strong> segura con Zoom</li>
+                <li>✅ <strong>Monitoreo en tiempo real</strong> de participantes</li>
+                <li>✅ <strong>Enlaces cortos</strong> con Short.io</li>
+                <li>✅ <strong>Soporte bilingüe</strong> español/inglés</li>
+            </ul>
+        </div>
+
+        <div class="docs-grid">
+            <a href="/docs-setup.html" class="doc-card">
+                <span class="doc-icon">🔧</span>
+                <div class="doc-title">Setup Guide</div>
+                <div class="doc-description">Configuración inicial paso a paso</div>
+                <ul class="doc-features">
+                    <li>Configuración GitHub Repository</li>
+                    <li>Habilitar GitHub Pages</li>
+                    <li>Variables de entorno</li>
+                    <li>Testing completo</li>
+                </ul>
+            </a>
+
+            <a href="/docs-oauth.html" class="doc-card">
+                <span class="doc-icon">🔐</span>
+                <div class="doc-title">OAuth Setup</div>
+                <div class="doc-description">Configuración de autenticación con Zoom</div>
+                <ul class="doc-features">
+                    <li>Crear App de Zoom</li>
+                    <li>Configurar Scopes</li>
+                    <li>OAuth Redirect URLs</li>
+                    <li>Webhook deployment</li>
+                </ul>
+            </a>
+
+            <a href="/docs-multipin.html" class="doc-card">
+                <span class="doc-icon">📌</span>
+                <div class="doc-title">Multipin Automation</div>
+                <div class="doc-description">Sistema automatizado de multipin con Puppeteer</div>
+                <ul class="doc-features">
+                    <li>Browser automation</li>
+                    <li>Timer de 60 segundos</li>
+                    <li>Monitoreo en tiempo real</li>
+                    <li>Observatory logging</li>
+                </ul>
+            </a>
+
+            <a href="/docs-shortio.html" class="doc-card">
+                <span class="doc-icon">🔗</span>
+                <div class="doc-title">Short.io Setup</div>
+                <div class="doc-description">Configuración de enlaces cortos</div>
+                <ul class="doc-features">
+                    <li>Dominio personalizado</li>
+                    <li>API integration</li>
+                    <li>Analytics tracking</li>
+                    <li>Branded links</li>
+                </ul>
+            </a>
+        </div>
+
+        <div class="quick-links">
+            <h2 style="margin-top: 0; color: #f39c12;">⚡ Enlaces Rápidos</h2>
+            <div class="link-grid">
+                <a href="https://marketplace.zoom.us/develop/apps" target="_blank" class="quick-link">
+                    📱 Zoom Marketplace
+                </a>
+                <a href="https://short.io" target="_blank" class="quick-link">
+                    🔗 Short.io Dashboard
+                </a>
+                <a href="https://t.me/BotFather" target="_blank" class="quick-link">
+                    🤖 BotFather
+                </a>
+                <a href="https://api.telegram.org/bot" target="_blank" class="quick-link">
+                    📡 Telegram Bot API
+                </a>
+            </div>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px; margin: 30px 0;">
+            <h2 style="margin-top: 0; color: #3498db;">📋 Comandos Principales</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                <div>
+                    <h3 style="color: #2ecc71;">🔐 Autenticación</h3>
+                    <ul style="margin: 0;">
+                        <li><code>/zoomlogin</code> - Conectar cuenta Zoom</li>
+                        <li><code>/status</code> - Estado de conexión</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 style="color: #e74c3c;">🤖 Automatización</h3>
+                    <ul style="margin: 0;">
+                        <li><code>/startbot</code> - Iniciar multipin bot</li>
+                        <li><code>/stopbot</code> - Detener automation</li>
+                        <li><code>/botstatus</code> - Estado de bots</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 style="color: #f39c12;">📚 Documentación</h3>
+                    <ul style="margin: 0;">
+                        <li><code>/docs</code> - Documentación completa</li>
+                        <li><code>/docs setup</code> - Guía configuración</li>
+                        <li><code>/docs oauth</code> - OAuth setup</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="github-link">
+            <a href="https://github.com/PupFr/Nebulosa" target="_blank">
+                📂 Ver en GitHub
+            </a>
+        </div>
+    </div>
+</body>
+</html>
