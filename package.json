@@ -2,11 +2,18 @@
   "name": "nebulosa-bot",
   "version": "1.0.0",
   "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js",
+    "dev": "nodemon bot.js"
+  },
   "dependencies": {
     "axios": "^1.6.0",
     "dotenv": "^16.3.0",
     "express": "^5.1.0",
     "node-telegram-bot-api": "^0.61.0",
     "puppeteer": "^21.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }
