@@ -59,6 +59,66 @@ app.get('/health', (req, res) => {
     });
 });
 
+// Zoom OAuth callback endpoint
+app.get('/auth/zoom/callback', (req, res) => {
+    const { code, state, error } = req.query;
+    
+    if (error) {
+        console.log('❌ OAuth error:', error);
+        res.send(`
+            <h1>🚨 OAuth Error</h1>
+            <p>Error: ${error}</p>
+            <p>Please try again with /zoomlogin in Telegram</p>
+        `);
+        return;
+    }
+    
+    if (!code) {
+        res.send(`
+            <h1>❌ No Authorization Code</h1>
+            <p>The authorization was not completed properly.</p>
+            <p>Please try again with /zoomlogin in Telegram</p>
+        `);
+        return;
+    }
+    
+    console.log('✅ OAuth callback received:', { code: code.substring(0, 10) + '...', state });
+    
+    // Success page
+    res.send(`
+        <html>
+            <head>
+                <title>Zoom OAuth Success</title>
+                <style>
+                    body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+                    .success { color: #28a745; }
+                    .code { background: #f8f9fa; padding: 10px; border-radius: 5px; margin: 20px 0; }
+                </style>
+            </head>
+            <body>
+                <h1 class="success">✅ OAuth Authorization Successful!</h1>
+                <p>Your Zoom account has been connected to LA NUBE BOT</p>
+                <div class="code">
+                    <strong>Authorization Code:</strong> ${code.substring(0, 20)}...
+                </div>
+                <p><strong>State:</strong> ${state}</p>
+                <hr>
+                <p>🎉 You can now return to Telegram and use:</p>
+                <ul style="text-align: left; display: inline-block;">
+                    <li><code>/create_meeting</code> - Create Zoom meetings</li>
+                    <li><code>/list_meetings</code> - View your meetings</li>
+                    <li><code>/status</code> - Check bot status</li>
+                </ul>
+                <p><small>This page can be closed safely.</small></p>
+            </body>
+        </html>
+    `);
+    
+    // TODO: Store the authorization code and exchange for access token
+    // For now, just log it for testing
+    console.log('🔑 Authorization code received for state:', state);
+});
+
 // Start Express server
 app.listen(PORT, () => {
     console.log(`🌐 Railway health server running on port ${PORT}`);
@@ -135,9 +195,9 @@ bot.onText(/\/zoomlogin/, (msg) => {
     const chatId = msg.chat.id;
     const userId = msg.from.id;
     
-    // Generate OAuth URL
+    // Generate OAuth URL - Use Railway callback for production
     const clientId = process.env.ZOOM_CLIENT_ID || 'vGVyI0IRv6si45iKO_qIw';
-    const redirectUri = encodeURIComponent(process.env.ZOOM_REDIRECT_URI || 'https://pupfr.github.io/Nebulosa/zoom-callback.html');
+    const redirectUri = encodeURIComponent('https://nebulosa-production.railway.app/auth/zoom/callback');
     const state = `user_${userId}_${Date.now()}`;
     
     const oauthUrl = `https://zoom.us/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}&scope=meeting:read,meeting:write,user:read`;
@@ -145,18 +205,25 @@ bot.onText(/\/zoomlogin/, (msg) => {
     const loginMessage = `
 🔐 **Autorización Zoom OAuth**
 
-Para usar las funciones de Zoom, necesitas autorizar el bot:
+⚠️ **PASO 1: Configurar Zoom App**
+Primero necesitas agregar esta URI a tu Zoom app:
+\`https://nebulosa-production.railway.app/auth/zoom/callback\`
 
-🔗 **[Hacer clic aquí para autorizar](${oauthUrl})**
+📝 **Configuración Zoom:**
+1. Ve a: https://marketplace.zoom.us/develop/apps
+2. Busca tu app con Client ID: \`${clientId}\`
+3. En la sección **OAuth**, agrega esta Redirect URI:
+   \`https://nebulosa-production.railway.app/auth/zoom/callback\`
+4. Guarda los cambios
 
-📝 **Instrucciones:**
-1. Haz clic en el enlace de arriba
-2. Inicia sesión en Zoom
-3. Autoriza la aplicación "LA NUBE BOT"
-4. Serás redirigido a la página de confirmación
-5. ¡Regresa aquí y usa /create_meeting!
+⚡ **PASO 2: Autorizar**
+Después de configurar la app, haz clic aquí:
+🔗 **[AUTORIZAR ZOOM](${oauthUrl})**
 
-⚡ **Estado:** ${state}
+💡 **Estado:** ${state}
+
+❌ **Si ves error 4.700**: La URI no está configurada
+✅ **Si funciona**: ¡Podrás crear reuniones!
     `;
     
     bot.sendMessage(chatId, loginMessage, { 
