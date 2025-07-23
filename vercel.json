@@ -1,0 +1,35 @@
+{
+  "version": 2,
+  "functions": {
+    "production-bot.js": {
+      "maxDuration": 10
+    }
+  },
+  "routes": [
+    {
+      "src": "/auth/zoom/callback",
+      "dest": "/production-bot.js"
+    },
+    {
+      "src": "/health",
+      "dest": "/production-bot.js"
+    },
+    {
+      "src": "/metrics",
+      "dest": "/production-bot.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/production-bot.js"
+    }
+  ],
+  "env": {
+    "BOT_TOKEN": "@bot_token_preview",
+    "ZOOM_CLIENT_ID": "@zoom_client_id",
+    "ZOOM_CLIENT_SECRET": "@zoom_client_secret",
+    "ZOOM_SECRET_TOKEN": "@zoom_secret_token",
+    "ZOOM_REDIRECT_URI": "@zoom_redirect_uri_preview",
+    "NODE_ENV": "preview",
+    "DEPLOYMENT_ENV": "vercel-preview"
+  }
+}
