@@ -431,6 +431,49 @@ const app = express();
 // Global bot instance
 let botInstance = null;
 
+// Health check endpoint for Railway V2
+app.get('/health', (req, res) => {
+    const healthStatus = {
+        status: 'healthy',
+        timestamp: new Date().toISOString(),
+        uptime: Math.floor(process.uptime()),
+        memory: {
+            used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
+            total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024)
+        },
+        bot: {
+            active: botInstance ? true : false,
+            activeSessions: botInstance ? botInstance.userSessions.size : 0,
+            monitoring: botInstance ? botInstance.monitoringActive : false
+        },
+        environment: {
+            nodeVersion: process.version,
+            platform: process.platform,
+            environment: process.env.NODE_ENV || 'development'
+        }
+    };
+    
+    res.json(healthStatus);
+});
+
+// Basic metrics endpoint
+app.get('/metrics', (req, res) => {
+    if (!botInstance) {
+        return res.status(503).json({ error: 'Bot not initialized' });
+    }
+    
+    const metrics = {
+        uptime: process.uptime(),
+        memory: process.memoryUsage(),
+        activeSessions: botInstance.userSessions.size,
+        monitoringActive: botInstance.monitoringActive,
+        browserBotActive: botInstance.browserBotActive,
+        timestamp: new Date().toISOString()
+    };
+    
+    res.json(metrics);
+});
+
 // OAuth callback route
 app.get('/auth/zoom/callback', async (req, res) => {
     const { code, state, error } = req.query;
@@ -502,11 +545,45 @@ if (require.main === module) {
     // Create bot instance
     botInstance = new ZoomTelegramBot();
     
+    // Graceful shutdown handling for Railway V2
+    process.on('SIGTERM', () => {
+        console.log('🛑 Received SIGTERM, graceful shutdown initiated...');
+        if (botInstance) {
+            botInstance.bot.stopPolling();
+        }
+        process.exit(0);
+    });
+    
+    process.on('SIGINT', () => {
+        console.log('🛑 Received SIGINT, graceful shutdown initiated...');
+        if (botInstance) {
+            botInstance.bot.stopPolling();
+        }
+        process.exit(0);
+    });
+    
+    // Unhandled promise rejection handling
+    process.on('unhandledRejection', (reason, promise) => {
+        console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+        // Don't exit process in production, log and continue
+    });
+    
     // Start OAuth callback server
     const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, '0.0.0.0', () => {
         console.log(`🚀 OAuth callback server running on port ${PORT}`);
-        console.log(`📍 Callback URL: http://localhost:${PORT}/auth/zoom/callback`);
+        console.log(`📍 Callback URL: ${process.env.ZOOM_REDIRECT_URI || `http://localhost:${PORT}/auth/zoom/callback`}`);
+        console.log(`💚 Health check: http://localhost:${PORT}/health`);
+        console.log(`📊 Metrics: http://localhost:${PORT}/metrics`);
+        console.log('🌍 Railway V2 Enhanced - Multi-region ready!');
+    });
+    
+    // Handle server shutdown gracefully
+    process.on('SIGTERM', () => {
+        console.log('🔄 Closing HTTP server...');
+        server.close(() => {
+            console.log('✅ HTTP server closed');
+        });
     });
 }
 

@@ -8,7 +8,9 @@
     "dev": "node basic-bot-implementation.js",
     "test": "node basic-bot-implementation.js",
     "build": "echo 'No build step required'",
-    "railway": "node production-bot.js"
+    "railway": "node production-bot.js",
+    "health": "curl -f http://localhost:3000/health || exit 1",
+    "monitor": "pm2 start production-bot.js --name nebulosa-bot"
   },
   "engines": {
     "node": ">=18.0.0",
