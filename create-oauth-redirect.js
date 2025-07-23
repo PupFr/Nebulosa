@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 /**
- * Script para crear el enlace OAuth correcto
- * Usa un slug específico para evitar conflictos
+ * Script to create the correct OAuth link
+ * Uses a specific slug to avoid conflicts
  */
 
 const fs = require('fs');
@@ -11,7 +11,7 @@ const https = require('https');
 const SHORTIO_API_KEY = 'sk_9uHbW34AHTAbBUZl';
 const DOMAIN = 'pupfrisky.com';
 
-console.log('🔑 Creando enlace OAuth correcto...');
+console.log('🔑 Creating correct OAuth link...');
 
 function makeRequest(options, data = null) {
     return new Promise((resolve, reject) => {
@@ -41,7 +41,7 @@ function makeRequest(options, data = null) {
 }
 
 async function createOAuthRedirect() {
-    console.log('📤 Creando enlace OAuth redirect...');
+    console.log('📤 Creating OAuth redirect link...');
     
     const svgContent = fs.readFileSync('./favicon.svg', 'utf8');
     const base64Content = Buffer.from(svgContent).toString('base64');
@@ -49,7 +49,7 @@ async function createOAuthRedirect() {
     const data = JSON.stringify({
         originalURL: 'https://pupfrisky.com/zoom-callback.php',
         domain: DOMAIN,
-        path: 'auth', // Usar 'auth' en lugar de 'oauth'
+        path: 'auth', // Use 'auth' instead of 'oauth'
         allowDuplicates: false,
         favicon: `data:image/svg+xml;base64,${base64Content}`,
         title: '🔑 Zoom OAuth Redirect - LA NUBE BOT',
@@ -73,17 +73,17 @@ async function createOAuthRedirect() {
         
         if (response.status === 200 || response.status === 201) {
             const shortUrl = response.data.secureShortURL || response.data.shortURL;
-            console.log(`✅ Enlace OAuth creado: ${shortUrl}`);
-            console.log(`📄 Título: ${response.data.title}`);
-            console.log(`📍 Destino: ${response.data.originalURL}`);
+            console.log(`✅ OAuth link created: ${shortUrl}`);
+            console.log(`📄 Title: ${response.data.title}`);
+            console.log(`📍 Destination: ${response.data.originalURL}`);
             console.log(`🆔 Link ID: ${response.data.id}`);
             return response.data;
         } else if (response.status === 409) {
-            console.log(`⚠️  El enlace /auth ya existe`);
+            console.log(`⚠️  The /auth link already exists`);
             return null;
         } else {
             console.error(`❌ Error: ${response.status}`);
-            console.error(`📄 Respuesta:`, response.data);
+            console.error(`📄 Response:`, response.data);
             return null;
         }
     } catch (error) {
@@ -93,7 +93,7 @@ async function createOAuthRedirect() {
 }
 
 async function createZoomCallback() {
-    console.log('📤 Creando enlace zoom-auth...');
+    console.log('📤 Creating zoom-auth link...');
     
     const svgContent = fs.readFileSync('./favicon.svg', 'utf8');
     const base64Content = Buffer.from(svgContent).toString('base64');
@@ -125,17 +125,17 @@ async function createZoomCallback() {
         
         if (response.status === 200 || response.status === 201) {
             const shortUrl = response.data.secureShortURL || response.data.shortURL;
-            console.log(`✅ Enlace Zoom Auth creado: ${shortUrl}`);
-            console.log(`📄 Título: ${response.data.title}`);
-            console.log(`📍 Destino: ${response.data.originalURL}`);
+            console.log(`✅ Zoom Auth link created: ${shortUrl}`);
+            console.log(`📄 Title: ${response.data.title}`);
+            console.log(`📍 Destination: ${response.data.originalURL}`);
             console.log(`🆔 Link ID: ${response.data.id}`);
             return response.data;
         } else if (response.status === 409) {
-            console.log(`⚠️  El enlace /zoom-auth ya existe`);
+            console.log(`⚠️  The /zoom-auth link already exists`);
             return null;
         } else {
             console.error(`❌ Error: ${response.status}`);
-            console.error(`📄 Respuesta:`, response.data);
+            console.error(`📄 Response:`, response.data);
             return null;
         }
     } catch (error) {
@@ -145,13 +145,13 @@ async function createZoomCallback() {
 }
 
 async function main() {
-    console.log('📋 Configuración:');
-    console.log(`   API Key: ✅ Configurado`);
-    console.log(`   Dominio: ${DOMAIN}`);
-    console.log(`   Destino: https://pupfrisky.com/zoom-callback.php`);
+    console.log('📋 Configuration:');
+    console.log(`   API Key: ✅ Configured`);
+    console.log(`   Domain: ${DOMAIN}`);
+    console.log(`   Destination: https://pupfrisky.com/zoom-callback.php`);
     console.log('');
 
-    // Crear enlaces OAuth alternativos
+    // Create alternative OAuth links
     const authLink = await createOAuthRedirect();
     console.log('');
     
@@ -159,23 +159,23 @@ async function main() {
     console.log('');
 
     if (authLink || zoomAuthLink) {
-        console.log('🎉 ¡Enlaces OAuth creados exitosamente!');
+        console.log('🎉 OAuth links created successfully!');
         console.log('');
-        console.log('📋 URLs para usar como Redirect URI en Zoom:');
+        console.log('📋 URLs to use as Redirect URI in Zoom:');
         
         if (authLink) {
-            console.log(`   🔗 Opción 1: ${authLink.secureShortURL || authLink.shortURL}`);
+            console.log(`   🔗 Option 1: ${authLink.secureShortURL || authLink.shortURL}`);
         }
         
         if (zoomAuthLink) {
-            console.log(`   🔗 Opción 2: ${zoomAuthLink.secureShortURL || zoomAuthLink.shortURL}`);
+            console.log(`   🔗 Option 2: ${zoomAuthLink.secureShortURL || zoomAuthLink.shortURL}`);
         }
         
         console.log('');
-        console.log('✅ Usa cualquiera de estos enlaces como Redirect URI');
-        console.log('   en la configuración de tu aplicación Zoom OAuth!');
+        console.log('✅ Use any of these links as Redirect URI');
+        console.log('   in your Zoom OAuth application configuration!');
         
-        // Guardar información
+        // Save information
         const oauthInfo = {
             created_at: new Date().toISOString(),
             auth_link: authLink,
@@ -184,9 +184,9 @@ async function main() {
         };
         
         fs.writeFileSync('./oauth-redirect-links.json', JSON.stringify(oauthInfo, null, 2));
-        console.log('💾 Información guardada en oauth-redirect-links.json');
+        console.log('💾 Information saved in oauth-redirect-links.json');
     } else {
-        console.log('⚠️  Los enlaces ya existen o hubo errores al crearlos');
+        console.log('⚠️  Links already exist or there were errors creating them');
     }
 }
 

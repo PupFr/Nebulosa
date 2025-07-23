@@ -146,7 +146,7 @@ app.get('/auth/zoom/callback', async (req, res) => {
     res.send(`
       <html>
         <head>
-          <title>🎉 Zoom Connected Successfully!</title>
+          <title>🎉 Connection Successful!</title>
           <style>
             body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
             .container { background: rgba(255,255,255,0.1); padding: 40px; border-radius: 20px; max-width: 500px; margin: auto; }
@@ -159,17 +159,17 @@ app.get('/auth/zoom/callback', async (req, res) => {
         </head>
         <body>
           <div class="container">
-            <h1>🎉 ¡Conexión Exitosa!</h1>
-            <p class="success">✅ Tu cuenta de Zoom ha sido conectada correctamente</p>
-            <p>Regresa a Telegram para usar todos los comandos del bot:</p>
+            <h1>🎉 Connection Successful!</h1>
+            <p class="success">✅ Your Zoom account has been successfully connected</p>
+            <p>Return to Telegram to use all bot commands:</p>
             <ul>
-              <li><strong>/startsession</strong> - Iniciar sesión de Zoom</li>
-              <li><strong>/createroom</strong> - Crear reunión con multipin automático</li>
-              <li><strong>/startbot</strong> - Iniciar automatización de browser</li>
-              <li><strong>/status</strong> - Ver estado del sistema</li>
+              <li><strong>/startsession</strong> - Start Zoom session</li>
+              <li><strong>/createroom</strong> - Create meeting with auto-multipin</li>
+              <li><strong>/startbot</strong> - Start browser automation</li>
+              <li><strong>/status</strong> - View system status</li>
             </ul>
-            <p>¡Ya puedes cerrar esta ventana y volver a Telegram!</p>
-            <button class="close-btn" onclick="window.close()">Cerrar Ventana</button>
+            <p>You can now close this window and return to Telegram!</p>
+            <button class="close-btn" onclick="window.close()">Close Window</button>
           </div>
         </body>
       </html>

@@ -5,6 +5,7 @@ const TelegramBot = require('node-telegram-bot-api');
 
 console.log('🔍 Testing Telegram Bot Connection...');
 console.log('Bot Token:', process.env.BOT_TOKEN ? 'Found' : 'Missing');
+console.log('Bot Token Value:', process.env.BOT_TOKEN);
 
 if (!process.env.BOT_TOKEN) {
   console.error('❌ BOT_TOKEN not found in environment variables');
