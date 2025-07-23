@@ -1,0 +1,36 @@
+{
+  "name": "zoom-telegram-bot",
+  "version": "1.0.0",
+  "description": "Telegram bot for Zoom meeting management with OAuth integration",
+  "main": "production-bot.js",
+  "scripts": {
+    "start": "node production-bot.js",
+    "dev": "node basic-bot-implementation.js",
+    "test": "node basic-bot-implementation.js",
+    "build": "echo 'No build step required'",
+    "railway": "node production-bot.js"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "zoom",
+    "oauth",
+    "meeting",
+    "automation"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "node-telegram-bot-api": "^0.61.0",
+    "axios": "^1.4.0",
+    "express": "^4.18.2",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

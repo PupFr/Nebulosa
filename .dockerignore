@@ -1,0 +1,27 @@
+# Railway deployment files
+railway.json
+.railway/
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Logs
+*.log
+logs/
+
+# Node modules
+node_modules/
+npm-debug.log*
+
+# Testing files
+test/
+*.test.js
+
+# Development files
+basic-bot-implementation.js
+
+# OS generated files
+.DS_Store
+Thumbs.db
