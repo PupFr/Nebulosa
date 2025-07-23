@@ -5,7 +5,7 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Copy package files and bot script
-COPY package.json .
+COPY package-railway.json package.json
 COPY railway-bot-simple.js .
 
 # Install dependencies

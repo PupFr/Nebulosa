@@ -1,10 +1,12 @@
-// 🚂 Railway-Compatible Bot (Polling Mode - More Reliable)
+// 🚂 Railway-Compatible Bot (Polling Mode - Modernized)
 const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const axios = require('axios');
 require('dotenv').config();
 
-console.log('🚂 Starting Railway Telegram Bot...');
+console.log('🚂 Starting Modern Railway Telegram Bot...');
+console.log('📦 Node version:', process.version);
+console.log('🔧 Environment:', process.env.NODE_ENV || 'development');
 
 // Environment variables
 const BOT_TOKEN = process.env.BOT_TOKEN;
@@ -20,7 +22,17 @@ console.log('✅ Bot token found');
 console.log('🔧 Initializing bot...');
 
 // Initialize bot with polling (more reliable for Railway)
-const bot = new TelegramBot(BOT_TOKEN, { polling: true });
+const bot = new TelegramBot(BOT_TOKEN, { 
+    polling: {
+        interval: 1000,
+        autoStart: true,
+        params: {
+            timeout: 30
+        }
+    }
+});
+
+console.log('✅ Bot initialized with modern polling configuration');
 
 // Express app for health checks
 const app = express();
