@@ -4,9 +4,9 @@ FROM node:18-alpine
 # Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package-bot.json package.json
-COPY production-bot.js .
+# Copy package files and bot script
+COPY package.json .
+COPY railway-bot-simple.js .
 
 # Install dependencies
 RUN npm install --production
@@ -15,4 +15,4 @@ RUN npm install --production
 EXPOSE 3000
 
 # Start the bot
-CMD ["node", "production-bot.js"]
+CMD ["node", "railway-bot-simple.js"]
