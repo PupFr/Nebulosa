@@ -1,4 +1,8 @@
 const TelegramBot = require('node-telegram-bot-api');
+<<<<<<< HEAD
+=======
+const axios = require('axios');
+>>>>>>> origin/main
 const { 
   getAccessToken, 
   refreshAccessToken, 
@@ -1186,6 +1190,13 @@ async function processViolations(accessToken, meetingId, participant, violations
 async function shortenUrl(longUrl) {
   const apiKey = process.env.SHORTIO_API_KEY;
   
+<<<<<<< HEAD
+=======
+  // Temporarily disable Short.io due to domain access issues
+  console.log('🔗 Short.io temporarily disabled, using original URL');
+  return longUrl;
+  
+>>>>>>> origin/main
   if (!apiKey || apiKey === 'your_shortio_api_key_here') {
     console.log('🔗 No Short.io API key found, using original URL');
     return longUrl;
@@ -1194,7 +1205,11 @@ async function shortenUrl(longUrl) {
   try {
     const response = await axios.post('https://api.short.io/links', {
       originalURL: longUrl,
+<<<<<<< HEAD
       domain: 'short.io', // or your custom domain
+=======
+      domain: 'short.io', // Use Short.io default domain (working)
+>>>>>>> origin/main
       allowDuplicates: false,
       tags: ['zoom-oauth', 'la-nube-bot']
     }, {
@@ -1215,7 +1230,11 @@ async function shortenUrl(longUrl) {
 }
 
 async function generateAuthUrl(userId) {
+<<<<<<< HEAD
   const redirectUri = process.env.ZOOM_REDIRECT_URI || 'https://pupfrisky.com/zoom-callback';
+=======
+  const redirectUri = process.env.ZOOM_REDIRECT_URI || 'https://pupfr.github.io/Nebulosa/zoom-callback.html';
+>>>>>>> origin/main
   const clientId = (process.env.ZOOM_USER_CLIENT_ID || 'K3t8Sd3rSZOSKfkyMftDXg').trim();
   
   // Create the OAuth URL

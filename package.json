@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "bot.js",
   "scripts": {
+<<<<<<< HEAD
     "start": "node bot.js",
     "dev": "nodemon bot.js"
   },
@@ -15,5 +16,20 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
+=======
+    "start": "node railway-bot-simple.js",
+    "dev": "nodemon bot.js",
+    "local": "node bot.js",
+    "railway": "node railway-bot-simple.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "node-telegram-bot-api": "^0.66.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+>>>>>>> origin/main
   }
 }

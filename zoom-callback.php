@@ -3,8 +3,13 @@ require_once __DIR__ . '/oauth/zoomOAuth.php';
 require_once __DIR__ . '/oauth/telegramNotifier.php';
 
 // === ZOOM APP CREDENTIALS (from Nebulosa Zoom OAuth App) ===
+<<<<<<< HEAD
 $client_id = 'Ws4TzKUQQ4u64Zd52XqZ3A';
 $client_secret = 'eJSxTUMYTif59Xz8cUyRKRbbI7TSyD5Q';
+=======
+$client_id = 'K3t8Sd3rSZOSKfkyMftDXg';
+$client_secret = 'Gb9JmLsI1brv4bPdAPB9CSknQV4GiFB';
+>>>>>>> origin/main
 $redirect_uri = 'https://pupfrisky.com/zoom-callback.php';
 
 // === GET CODE FROM ZOOM ===
