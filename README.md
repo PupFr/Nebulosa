@@ -1,5 +1,7 @@
 # LA NUBE BOT ✦　ＬＡ　ＮＵＢＥ　ＢＯＴ　☁️
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/530989b5f2c14416ba54f1800e23b08e)](https://app.codacy.com/gh/PupFr/Nebulosa?utm_source=github.com&utm_medium=referral&utm_content=PupFr/Nebulosa&utm_campaign=Badge_Grade)
+
 An intelligent Zoom meeting management Telegram bot that revolutionizes virtual collaboration through advanced AI-powered features and seamless communication technologies.
 
 ## Features
