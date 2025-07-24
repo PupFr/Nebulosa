@@ -4,6 +4,7 @@
   "main": "bot.js",
   "scripts": {
 <<<<<<< HEAD
+<<<<<<< HEAD
     "start": "node bot.js",
     "dev": "nodemon bot.js"
   },
@@ -23,6 +24,14 @@
     "railway": "node railway-bot-simple.js"
   },
   "dependencies": {
+=======
+    "start": "node railway-bot-simple.js",
+    "dev": "nodemon bot.js",
+    "local": "node bot.js",
+    "railway": "node railway-bot-simple.js"
+  },
+  "dependencies": {
+>>>>>>> origin/main
     "axios": "^1.7.7",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
@@ -30,6 +39,9 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.4"
+<<<<<<< HEAD
+>>>>>>> origin/main
+=======
 >>>>>>> origin/main
   }
 }

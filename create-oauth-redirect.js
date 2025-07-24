@@ -2,8 +2,13 @@
 
 /**
 <<<<<<< HEAD
+<<<<<<< HEAD
  * Script para crear el enlace OAuth correcto
  * Usa un slug específico para evitar conflictos
+=======
+ * Script to create the correct OAuth link
+ * Uses a specific slug to avoid conflicts
+>>>>>>> origin/main
 =======
  * Script to create the correct OAuth link
  * Uses a specific slug to avoid conflicts
@@ -17,7 +22,11 @@ const SHORTIO_API_KEY = 'sk_9uHbW34AHTAbBUZl';
 const DOMAIN = 'pupfrisky.com';
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 console.log('🔑 Creando enlace OAuth correcto...');
+=======
+console.log('🔑 Creating correct OAuth link...');
+>>>>>>> origin/main
 =======
 console.log('🔑 Creating correct OAuth link...');
 >>>>>>> origin/main
@@ -51,7 +60,11 @@ function makeRequest(options, data = null) {
 
 async function createOAuthRedirect() {
 <<<<<<< HEAD
+<<<<<<< HEAD
     console.log('📤 Creando enlace OAuth redirect...');
+=======
+    console.log('📤 Creating OAuth redirect link...');
+>>>>>>> origin/main
 =======
     console.log('📤 Creating OAuth redirect link...');
 >>>>>>> origin/main
@@ -63,7 +76,11 @@ async function createOAuthRedirect() {
         originalURL: 'https://pupfrisky.com/zoom-callback.php',
         domain: DOMAIN,
 <<<<<<< HEAD
+<<<<<<< HEAD
         path: 'auth', // Usar 'auth' en lugar de 'oauth'
+=======
+        path: 'auth', // Use 'auth' instead of 'oauth'
+>>>>>>> origin/main
 =======
         path: 'auth', // Use 'auth' instead of 'oauth'
 >>>>>>> origin/main
@@ -91,6 +108,7 @@ async function createOAuthRedirect() {
         if (response.status === 200 || response.status === 201) {
             const shortUrl = response.data.secureShortURL || response.data.shortURL;
 <<<<<<< HEAD
+<<<<<<< HEAD
             console.log(`✅ Enlace OAuth creado: ${shortUrl}`);
             console.log(`📄 Título: ${response.data.title}`);
             console.log(`📍 Destino: ${response.data.originalURL}`);
@@ -103,6 +121,8 @@ async function createOAuthRedirect() {
             console.error(`❌ Error: ${response.status}`);
             console.error(`📄 Respuesta:`, response.data);
 =======
+=======
+>>>>>>> origin/main
             console.log(`✅ OAuth link created: ${shortUrl}`);
             console.log(`📄 Title: ${response.data.title}`);
             console.log(`📍 Destination: ${response.data.originalURL}`);
@@ -114,6 +134,9 @@ async function createOAuthRedirect() {
         } else {
             console.error(`❌ Error: ${response.status}`);
             console.error(`📄 Response:`, response.data);
+<<<<<<< HEAD
+>>>>>>> origin/main
+=======
 >>>>>>> origin/main
             return null;
         }
@@ -125,7 +148,11 @@ async function createOAuthRedirect() {
 
 async function createZoomCallback() {
 <<<<<<< HEAD
+<<<<<<< HEAD
     console.log('📤 Creando enlace zoom-auth...');
+=======
+    console.log('📤 Creating zoom-auth link...');
+>>>>>>> origin/main
 =======
     console.log('📤 Creating zoom-auth link...');
 >>>>>>> origin/main
@@ -161,6 +188,7 @@ async function createZoomCallback() {
         if (response.status === 200 || response.status === 201) {
             const shortUrl = response.data.secureShortURL || response.data.shortURL;
 <<<<<<< HEAD
+<<<<<<< HEAD
             console.log(`✅ Enlace Zoom Auth creado: ${shortUrl}`);
             console.log(`📄 Título: ${response.data.title}`);
             console.log(`📍 Destino: ${response.data.originalURL}`);
@@ -173,6 +201,8 @@ async function createZoomCallback() {
             console.error(`❌ Error: ${response.status}`);
             console.error(`📄 Respuesta:`, response.data);
 =======
+=======
+>>>>>>> origin/main
             console.log(`✅ Zoom Auth link created: ${shortUrl}`);
             console.log(`📄 Title: ${response.data.title}`);
             console.log(`📍 Destination: ${response.data.originalURL}`);
@@ -184,6 +214,9 @@ async function createZoomCallback() {
         } else {
             console.error(`❌ Error: ${response.status}`);
             console.error(`📄 Response:`, response.data);
+<<<<<<< HEAD
+>>>>>>> origin/main
+=======
 >>>>>>> origin/main
             return null;
         }
@@ -195,6 +228,7 @@ async function createZoomCallback() {
 
 async function main() {
 <<<<<<< HEAD
+<<<<<<< HEAD
     console.log('📋 Configuración:');
     console.log(`   API Key: ✅ Configurado`);
     console.log(`   Dominio: ${DOMAIN}`);
@@ -203,6 +237,8 @@ async function main() {
 
     // Crear enlaces OAuth alternativos
 =======
+=======
+>>>>>>> origin/main
     console.log('📋 Configuration:');
     console.log(`   API Key: ✅ Configured`);
     console.log(`   Domain: ${DOMAIN}`);
@@ -210,6 +246,9 @@ async function main() {
     console.log('');
 
     // Create alternative OAuth links
+<<<<<<< HEAD
+>>>>>>> origin/main
+=======
 >>>>>>> origin/main
     const authLink = await createOAuthRedirect();
     console.log('');
@@ -218,6 +257,7 @@ async function main() {
     console.log('');
 
     if (authLink || zoomAuthLink) {
+<<<<<<< HEAD
 <<<<<<< HEAD
         console.log('🎉 ¡Enlaces OAuth creados exitosamente!');
         console.log('');
@@ -237,6 +277,8 @@ async function main() {
         
         // Guardar información
 =======
+=======
+>>>>>>> origin/main
         console.log('🎉 OAuth links created successfully!');
         console.log('');
         console.log('📋 URLs to use as Redirect URI in Zoom:');
@@ -254,6 +296,9 @@ async function main() {
         console.log('   in your Zoom OAuth application configuration!');
         
         // Save information
+<<<<<<< HEAD
+>>>>>>> origin/main
+=======
 >>>>>>> origin/main
         const oauthInfo = {
             created_at: new Date().toISOString(),
@@ -264,9 +309,15 @@ async function main() {
         
         fs.writeFileSync('./oauth-redirect-links.json', JSON.stringify(oauthInfo, null, 2));
 <<<<<<< HEAD
+<<<<<<< HEAD
         console.log('💾 Información guardada en oauth-redirect-links.json');
     } else {
         console.log('⚠️  Los enlaces ya existen o hubo errores al crearlos');
+=======
+        console.log('💾 Information saved in oauth-redirect-links.json');
+    } else {
+        console.log('⚠️  Links already exist or there were errors creating them');
+>>>>>>> origin/main
 =======
         console.log('💾 Information saved in oauth-redirect-links.json');
     } else {

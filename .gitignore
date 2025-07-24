@@ -9,6 +9,10 @@ npm-debug.log*
 .env
 .env
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+.vercel
+>>>>>>> origin/main
 =======
 .vercel
 >>>>>>> origin/main

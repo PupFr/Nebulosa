@@ -1,5 +1,9 @@
 const TelegramBot = require('node-telegram-bot-api');
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+const axios = require('axios');
+>>>>>>> origin/main
 =======
 const axios = require('axios');
 >>>>>>> origin/main
@@ -1191,11 +1195,17 @@ async function shortenUrl(longUrl) {
   const apiKey = process.env.SHORTIO_API_KEY;
   
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/main
   // Temporarily disable Short.io due to domain access issues
   console.log('🔗 Short.io temporarily disabled, using original URL');
   return longUrl;
   
+<<<<<<< HEAD
+>>>>>>> origin/main
+=======
 >>>>>>> origin/main
   if (!apiKey || apiKey === 'your_shortio_api_key_here') {
     console.log('🔗 No Short.io API key found, using original URL');
@@ -1206,7 +1216,11 @@ async function shortenUrl(longUrl) {
     const response = await axios.post('https://api.short.io/links', {
       originalURL: longUrl,
 <<<<<<< HEAD
+<<<<<<< HEAD
       domain: 'short.io', // or your custom domain
+=======
+      domain: 'short.io', // Use Short.io default domain (working)
+>>>>>>> origin/main
 =======
       domain: 'short.io', // Use Short.io default domain (working)
 >>>>>>> origin/main
@@ -1231,7 +1245,11 @@ async function shortenUrl(longUrl) {
 
 async function generateAuthUrl(userId) {
 <<<<<<< HEAD
+<<<<<<< HEAD
   const redirectUri = process.env.ZOOM_REDIRECT_URI || 'https://pupfrisky.com/zoom-callback';
+=======
+  const redirectUri = process.env.ZOOM_REDIRECT_URI || 'https://pupfr.github.io/Nebulosa/zoom-callback.html';
+>>>>>>> origin/main
 =======
   const redirectUri = process.env.ZOOM_REDIRECT_URI || 'https://pupfr.github.io/Nebulosa/zoom-callback.html';
 >>>>>>> origin/main
