@@ -1,358 +1,415 @@
-<!D    <meta charset="UTF-8">
+<!D <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🔑 OAuth Zoom - LA NUBE BOT</title>
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAANKSURBVFhH7ZdNaBNBFMdnk7RJ06SNH61WW1uxVkSxKFgQD4IHL148ePHgwYMHL168ePDgwYMHL168ePDgwYMHL168ePDgwYMFL168ePDgwYMXL168ePDgwYMXDx68eO/N7CbZZJNsNpvdSWYevPn95v0z782bnQH+U/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8A==">
-<<<<<<< HEAD
-<<<<<<< HEAD
-    <meta name="description" content="Configuración OAuth para integración con Zoom API - Autenticación segura para LA NUBE BOT">
-=======
-    <meta name="description" content="OAuth configuration for Zoom API integration - Secure authentication for LA NUBE BOT">
->>>>>>> origin/main
-=======
-    <meta name="description" content="OAuth configuration for Zoom API integration - Secure authentication for LA NUBE BOT">
->>>>>>> origin/main
-    <meta name="keywords" content="Zoom OAuth, API authentication, bot integration, secure login">
-    <meta name="author" content="PupFr">
-    <meta name="theme-color" content="#667eea">YPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔐 OAuth Setup - LA NUBE BOT</title>
-    <style>
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; 
-            line-height: 1.6; margin: 0; padding: 20px; 
-            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%); 
-            color: white; min-height: 100vh;
-        }
-        .container { 
-            max-width: 900px; margin: 0 auto; 
-            background: rgba(255,255,255,0.1); padding: 40px; 
-            border-radius: 20px; backdrop-filter: blur(10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-        .header {
-            text-align: center; margin-bottom: 40px;
-            border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 20px;
-        }
-        h1 { font-size: 3em; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-        .subtitle { margin-top: 10px; font-size: 1.2em; opacity: 0.9; }
-        h2 { 
-            color: #f39c12; margin-top: 30px; 
-            border-left: 4px solid #f39c12; padding-left: 15px;
-        }
-        .step-card { 
-            background: rgba(255,255,255,0.15); padding: 25px; margin: 20px 0;
-            border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);
-        }
-        .step-number {
-            background: #e74c3c; color: white; width: 40px; height: 40px;
-            border-radius: 50%; display: inline-flex; align-items: center;
-            justify-content: center; font-weight: bold; margin-right: 15px;
-        }
-        .code-block { 
-            background: rgba(0,0,0,0.4); color: #00ff88; padding: 20px; 
-            border-radius: 10px; font-family: 'Monaco', monospace; 
-            margin: 15px 0; overflow-x: auto; border: 1px solid rgba(0,255,136,0.3);
-        }
-        .warning { 
-            background: rgba(241, 196, 15, 0.2); padding: 15px; 
-            border-radius: 8px; margin: 15px 0; border-left: 4px solid #f1c40f;
-        }
-        .success { 
-            background: rgba(46, 204, 113, 0.2); padding: 15px; 
-            border-radius: 8px; margin: 15px 0; border-left: 4px solid #2ecc71;
-        }
-        .info { 
-            background: rgba(52, 152, 219, 0.2); padding: 15px; 
-            border-radius: 8px; margin: 15px 0; border-left: 4px solid #3498db;
-        }
-        ul li { margin: 8px 0; }
-        .nav-links {
-            text-align: center; margin-top: 40px; padding-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.3);
-        }
-        .nav-links a {
-            display: inline-block; margin: 0 15px; padding: 12px 25px;
-            background: rgba(255,255,255,0.2); color: white; border-radius: 25px;
-            text-decoration: none; transition: all 0.3s;
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-        .nav-links a:hover { 
-            background: rgba(255,255,255,0.3); 
-            transform: translateY(-2px);
-        }
-        .credentials {
-            background: rgba(231, 76, 60, 0.2); padding: 20px;
-            border-radius: 10px; margin: 20px 0;
-            border: 2px solid #e74c3c;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🔐 OAuth Setup</h1>
-<<<<<<< HEAD
-<<<<<<< HEAD
-            <p class="subtitle">Configuración de autenticación OAuth con Zoom</p>
-        </div>
+    <link rel="icon" type="image/png"
+        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAANKSURBVFhH7ZdNaBNBFMdnk7RJ06SNH61WW1uxVkSxKFgQD4IHL148ePHgwYMHL168ePDgwYMHL168ePDgwYMHL168ePDgwYMFL168ePDgwYMXL168ePDgwYMXDx68eO/N7CbZZJNsNpvdSWYevPn95v0z782bnQH+U/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8A==">
+    <<<<<<< HEAD <<<<<<< HEAD <meta name="description"
+        content="Configuración OAuth para integración con Zoom API - Autenticación segura para LA NUBE BOT">
+        =======
+        <meta name="description"
+            content="OAuth configuration for Zoom API integration - Secure authentication for LA NUBE BOT">
+        >>>>>>> origin/main
+        =======
+        <meta name="description"
+            content="OAuth configuration for Zoom API integration - Secure authentication for LA NUBE BOT">
+        >>>>>>> origin/main
+        <meta name="keywords" content="Zoom OAuth, API authentication, bot integration, secure login">
+        <meta name="author" content="PupFr">
+        <meta name="theme-color" content="#667eea">YPE html>
+        <html lang="es">
 
-        <div class="step-card">
-            <h2><span class="step-number">1</span>Crear App de Zoom</h2>
-            <p>Configura tu aplicación en Zoom Marketplace:</p>
-            <ol>
-                <li>Ve a <a href="https://marketplace.zoom.us/develop/create" target="_blank" style="color: #3498db;">Zoom Marketplace</a></li>
-                <li>Click en "Create" → "OAuth App"</li>
-                <li>Tipo de aplicación: <strong>User-managed app</strong></li>
-                <li>Completa la información básica de tu app</li>
-=======
-=======
->>>>>>> origin/main
-            <p class="subtitle">OAuth authentication configuration with Zoom</p>
-        </div>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>🔐 OAuth Setup - LA NUBE BOT</title>
+            <style>
+                body {
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+                    line-height: 1.6;
+                    margin: 0;
+                    padding: 20px;
+                    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+                    color: white;
+                    min-height: 100vh;
+                }
 
-        <div class="step-card">
-            <h2><span class="step-number">1</span>Create Zoom App</h2>
-            <p>Configure your application in Zoom Marketplace:</p>
-            <ol>
-                <li>Go to <a href="https://marketplace.zoom.us/develop/create" target="_blank" style="color: #3498db;">Zoom Marketplace</a></li>
-                <li>Click "Create" → "OAuth App"</li>
-                <li>Application type: <strong>User-managed app</strong></li>
-                <li>Complete your app's basic information</li>
-<<<<<<< HEAD
->>>>>>> origin/main
-=======
->>>>>>> origin/main
-            </ol>
-        </div>
+                .container {
+                    max-width: 900px;
+                    margin: 0 auto;
+                    background: rgba(255, 255, 255, 0.1);
+                    padding: 40px;
+                    border-radius: 20px;
+                    -webkit-backdrop-filter: blur(10px);
+                    backdrop-filter: blur(10px);
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+                }
 
-        <div class="step-card">
-<<<<<<< HEAD
-<<<<<<< HEAD
-            <h2><span class="step-number">2</span>Configurar OAuth Settings</h2>
-            
-            <div class="credentials">
-                <h3>🔑 Credenciales Actuales</h3>
-=======
-=======
->>>>>>> origin/main
-            <h2><span class="step-number">2</span>Configure OAuth Settings</h2>
-            
-            <div class="credentials">
-                <h3>🔑 Current Credentials</h3>
-<<<<<<< HEAD
->>>>>>> origin/main
-=======
->>>>>>> origin/main
-                <div class="code-block">
-Client ID: K3t8Sd3rSZOSKfkyMftDXg
-Client Secret: Gb9JmLsI1brv4bPdAPB9CSknQV4GiFB
+                .header {
+                    text-align: center;
+                    margin-bottom: 40px;
+                    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+                    padding-bottom: 20px;
+                }
+
+                h1 {
+                    font-size: 3em;
+                    margin: 0;
+                    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+                }
+
+                .subtitle {
+                    margin-top: 10px;
+                    font-size: 1.2em;
+                    opacity: 0.9;
+                }
+
+                h2 {
+                    color: #f39c12;
+                    margin-top: 30px;
+                    border-left: 4px solid #f39c12;
+                    padding-left: 15px;
+                }
+
+                .step-card {
+                    background: rgba(255, 255, 255, 0.15);
+                    padding: 25px;
+                    margin: 20px 0;
+                    border-radius: 15px;
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                }
+
+                .step-number {
+                    background: #e74c3c;
+                    color: white;
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                    margin-right: 15px;
+                }
+
+                .code-block {
+                    background: rgba(0, 0, 0, 0.4);
+                    color: #00ff88;
+                    padding: 20px;
+                    border-radius: 10px;
+                    font-family: 'Monaco', monospace;
+                    margin: 15px 0;
+                    overflow-x: auto;
+                    border: 1px solid rgba(0, 255, 136, 0.3);
+                }
+
+                .warning {
+                    background: rgba(241, 196, 15, 0.2);
+                    padding: 15px;
+                    border-radius: 8px;
+                    margin: 15px 0;
+                    border-left: 4px solid #f1c40f;
+                }
+
+                .success {
+                    background: rgba(46, 204, 113, 0.2);
+                    padding: 15px;
+                    border-radius: 8px;
+                    margin: 15px 0;
+                    border-left: 4px solid #2ecc71;
+                }
+
+                .info {
+                    background: rgba(52, 152, 219, 0.2);
+                    padding: 15px;
+                    border-radius: 8px;
+                    margin: 15px 0;
+                    border-left: 4px solid #3498db;
+                }
+
+                ul li {
+                    margin: 8px 0;
+                }
+
+                .nav-links {
+                    text-align: center;
+                    margin-top: 40px;
+                    padding-top: 20px;
+                    border-top: 1px solid rgba(255, 255, 255, 0.3);
+                }
+
+                .nav-links a {
+                    display: inline-block;
+                    margin: 0 15px;
+                    padding: 12px 25px;
+                    background: rgba(255, 255, 255, 0.2);
+                    color: white;
+                    border-radius: 25px;
+                    text-decoration: none;
+                    transition: all 0.3s;
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                }
+
+                .nav-links a:hover {
+                    background: rgba(255, 255, 255, 0.3);
+                    transform: translateY(-2px);
+                }
+
+                .credentials {
+                    background: rgba(231, 76, 60, 0.2);
+                    padding: 20px;
+                    border-radius: 10px;
+                    margin: 20px 0;
+                    border: 2px solid #e74c3c;
+                }
+            </style>
+        </head>
+
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>🔐 OAuth Setup</h1>
+                    <<<<<<< HEAD <<<<<<< HEAD <p class="subtitle">Configuración de autenticación OAuth con Zoom</p>
                 </div>
-            </div>
 
-            <h3>📍 OAuth Redirect URL</h3>
-            <div class="code-block">
-https://pupfrisky.com/zoom-callback
-            </div>
+                <div class="step-card">
+                    <h2><span class="step-number">1</span>Crear App de Zoom</h2>
+                    <p>Configura tu aplicación en Zoom Marketplace:</p>
+                    <ol>
+                        <li>Ve a <a href="https://marketplace.zoom.us/develop/create" target="_blank" rel="noopener"
+                                style="color: #3498db;">Zoom Marketplace</a></li>
+                        <li>Click en "Create" → "OAuth App"</li>
+                        <li>Tipo de aplicación: <strong>User-managed app</strong></li>
+                        <li>Completa la información básica de tu app</li>
+                        =======
+                        =======
+                        >>>>>>> origin/main
+                        <p class="subtitle">OAuth authentication configuration with Zoom</p>
+                </div>
 
-            <h3>📋 OAuth Allow Lists</h3>
-            <div class="code-block">
-https://pupfrisky.com/zoom-callback
-https://workspace.pupfrisky.repl.co/zoom/callback
-https://pupfr.github.io/Nebulosa/
-            </div>
-        </div>
+                <div class="step-card">
+                    <h2><span class="step-number">1</span>Create Zoom App</h2>
+                    <p>Configure your application in Zoom Marketplace:</p>
+                    <ol>
+                        <li>Go to <a href="https://marketplace.zoom.us/develop/create" target="_blank" rel="noopener"
+                                style="color: #3498db;">Zoom Marketplace</a></li>
+                        <li>Click "Create" → "OAuth App"</li>
+                        <li>Application type: <strong>User-managed app</strong></li>
+                        <li>Complete your app's basic information</li>
+                        <<<<<<< HEAD>>>>>>> origin/main
+                            =======
+                            >>>>>>> origin/main
+                    </ol>
+                </div>
 
-        <div class="step-card">
-<<<<<<< HEAD
-<<<<<<< HEAD
-            <h2><span class="step-number">3</span>Configurar Scopes</h2>
-            <p>Habilita los siguientes permisos en la sección "Scopes":</p>
-=======
-            <h2><span class="step-number">3</span>Configure Scopes</h2>
-            <p>Enable the following permissions in the "Scopes" section:</p>
->>>>>>> origin/main
-=======
-            <h2><span class="step-number">3</span>Configure Scopes</h2>
-            <p>Enable the following permissions in the "Scopes" section:</p>
->>>>>>> origin/main
-            
-            <div class="info">
-                <h3>📅 Meeting Scopes</h3>
-                <ul>
-<<<<<<< HEAD
-<<<<<<< HEAD
-                    <li><code>meeting:read:admin</code> - Leer información de reuniones</li>
-                    <li><code>meeting:write:admin</code> - Crear y modificar reuniones</li>
-                    <li><code>meeting:read:participant:admin</code> - Leer participantes</li>
-                    <li><code>meeting:write:participant:admin</code> - Gestionar participantes</li>
-=======
-=======
->>>>>>> origin/main
-                    <li><code>meeting:read:admin</code> - Read meeting information</li>
-                    <li><code>meeting:write:admin</code> - Create and modify meetings</li>
-                    <li><code>meeting:read:participant:admin</code> - Read participants</li>
-                    <li><code>meeting:write:participant:admin</code> - Manage participants</li>
-<<<<<<< HEAD
->>>>>>> origin/main
-=======
->>>>>>> origin/main
-                </ul>
-            </div>
+                <div class="step-card">
+                    <<<<<<< HEAD <<<<<<< HEAD <h2><span class="step-number">2</span>Configurar OAuth Settings</h2>
 
-            <div class="info">
-                <h3>👤 User Scopes</h3>
-                <ul>
-<<<<<<< HEAD
-<<<<<<< HEAD
-                    <li><code>user:read:admin</code> - Leer información de usuario</li>
-                    <li><code>user_profile</code> - Acceso al perfil de usuario</li>
-=======
-                    <li><code>user:read:admin</code> - Read user information</li>
-                    <li><code>user_profile</code> - Access to user profile</li>
->>>>>>> origin/main
-=======
-                    <li><code>user:read:admin</code> - Read user information</li>
-                    <li><code>user_profile</code> - Access to user profile</li>
->>>>>>> origin/main
-                </ul>
-            </div>
+                        <div class="credentials">
+                            <h3>🔑 Credenciales Actuales</h3>
+                            =======
+                            =======
+                            >>>>>>> origin/main
+                            <h2><span class="step-number">2</span>Configure OAuth Settings</h2>
 
-            <div class="info">
-<<<<<<< HEAD
-<<<<<<< HEAD
-                <h3>💬 Chat Scopes (Opcional)</h3>
-                <ul>
-                    <li><code>chat_message:read:admin</code> - Leer mensajes de chat</li>
-                    <li><code>chat_message:write:admin</code> - Enviar mensajes de chat</li>
-=======
-=======
->>>>>>> origin/main
-                <h3>💬 Chat Scopes (Optional)</h3>
-                <ul>
-                    <li><code>chat_message:read:admin</code> - Read chat messages</li>
-                    <li><code>chat_message:write:admin</code> - Send chat messages</li>
-<<<<<<< HEAD
->>>>>>> origin/main
-=======
->>>>>>> origin/main
-                </ul>
-            </div>
-        </div>
+                            <div class="credentials">
+                                <h3>🔑 Current Credentials</h3>
+                                <<<<<<< HEAD>>>>>>> origin/main
+                                    =======
+                                    >>>>>>> origin/main
+                                    <div class="code-block">
+                                        Client ID: K3t8Sd3rSZOSKfkyMftDXg
+                                        Client Secret: Gb9JmLsI1brv4bPdAPB9CSknQV4GiFB
+                                    </div>
+                            </div>
 
-        <div class="step-card">
-<<<<<<< HEAD
-<<<<<<< HEAD
-            <h2><span class="step-number">4</span>Variables de Entorno</h2>
-            <p>Configura las siguientes variables en tu archivo <code>.env</code>:</p>
-=======
-            <h2><span class="step-number">4</span>Environment Variables</h2>
-            <p>Configure the following variables in your <code>.env</code> file:</p>
->>>>>>> origin/main
-=======
-            <h2><span class="step-number">4</span>Environment Variables</h2>
-            <p>Configure the following variables in your <code>.env</code> file:</p>
->>>>>>> origin/main
-            <div class="code-block">
-# Zoom OAuth Configuration
-ZOOM_CLIENT_ID=K3t8Sd3rSZOSKfkyMftDXg
-ZOOM_CLIENT_SECRET=Gb9JmLsI1brv4bPdAPB9CSknQV4GiFB
-ZOOM_REDIRECT_URI=https://pupfrisky.com/zoom-callback
+                            <h3>📍 OAuth Redirect URL</h3>
+                            <div class="code-block">
+                                https://pupfrisky.com/zoom-callback
+                            </div>
 
-# Bot Configuration
-<<<<<<< HEAD
-<<<<<<< HEAD
-BOT_TOKEN=tu_telegram_bot_token
-LOG_CHANNEL_ID=tu_canal_log_id
-=======
-BOT_TOKEN=your_telegram_bot_token
-LOG_CHANNEL_ID=your_log_channel_id
->>>>>>> origin/main
-=======
-BOT_TOKEN=your_telegram_bot_token
-LOG_CHANNEL_ID=your_log_channel_id
->>>>>>> origin/main
-            </div>
-        </div>
+                            <h3>📋 OAuth Allow Lists</h3>
+                            <div class="code-block">
+                                https://pupfrisky.com/zoom-callback
+                                https://workspace.pupfrisky.repl.co/zoom/callback
+                                https://pupfr.github.io/Nebulosa/
+                            </div>
+                        </div>
 
-        <div class="step-card">
-<<<<<<< HEAD
-<<<<<<< HEAD
-            <h2><span class="step-number">5</span>Subir Webhook Files</h2>
-            <p>Sube los archivos de callback a tu dominio:</p>
-            
-            <div class="warning">
-                <h3>📁 Archivos a subir a pupfrisky.com:</h3>
-=======
-=======
->>>>>>> origin/main
-            <h2><span class="step-number">5</span>Upload Webhook Files</h2>
-            <p>Upload the callback files to your domain:</p>
-            
-            <div class="warning">
-                <h3>📁 Files to upload to pupfrisky.com:</h3>
-<<<<<<< HEAD
->>>>>>> origin/main
-=======
->>>>>>> origin/main
-                <ul>
-                    <li><code>zoom-callback.php</code> → <code>/zoom-callback.php</code></li>
-                    <li><code>zoom-callback.html</code> → <code>/zoom-callback.html</code></li>
-                </ul>
-            </div>
+                        <div class="step-card">
+                            <<<<<<< HEAD <<<<<<< HEAD <h2><span class="step-number">3</span>Configurar Scopes</h2>
+                                <p>Habilita los siguientes permisos en la sección "Scopes":</p>
+                                =======
+                                <h2><span class="step-number">3</span>Configure Scopes</h2>
+                                <p>Enable the following permissions in the "Scopes" section:</p>
+                                >>>>>>> origin/main
+                                =======
+                                <h2><span class="step-number">3</span>Configure Scopes</h2>
+                                <p>Enable the following permissions in the "Scopes" section:</p>
+                                >>>>>>> origin/main
 
-            <p>Métodos de subida:</p>
-            <ul>
-                <li><strong>FTP/SFTP:</strong> Usa FileZilla o WinSCP</li>
-                <li><strong>cPanel:</strong> File Manager</li>
-                <li><strong>Git:</strong> Push al repositorio y deploy</li>
-            </ul>
-        </div>
+                                <div class="info">
+                                    <h3>📅 Meeting Scopes</h3>
+                                    <ul>
+                                        <<<<<<< HEAD <<<<<<< HEAD <li><code>meeting:read:admin</code> - Leer información
+                                            de reuniones</li>
+                                            <li><code>meeting:write:admin</code> - Crear y modificar reuniones</li>
+                                            <li><code>meeting:read:participant:admin</code> - Leer participantes</li>
+                                            <li><code>meeting:write:participant:admin</code> - Gestionar participantes
+                                            </li>
+                                            =======
+                                            =======
+                                            >>>>>>> origin/main
+                                            <li><code>meeting:read:admin</code> - Read meeting information</li>
+                                            <li><code>meeting:write:admin</code> - Create and modify meetings</li>
+                                            <li><code>meeting:read:participant:admin</code> - Read participants</li>
+                                            <li><code>meeting:write:participant:admin</code> - Manage participants</li>
+                                            <<<<<<< HEAD>>>>>>> origin/main
+                                                =======
+                                                >>>>>>> origin/main
+                                    </ul>
+                                </div>
 
-        <div class="step-card">
-            <h2><span class="step-number">6</span>Probar OAuth Flow</h2>
-            
-            <div class="success">
-                <h3>✅ Pasos de Prueba:</h3>
-                <ol>
-                    <li>Usa <code>/zoomlogin</code> en tu bot de Telegram</li>
-                    <li>Click en el enlace OAuth generado</li>
-                    <li>Autoriza la aplicación en Zoom</li>
-                    <li>Verifica redirección a tu dominio</li>
-                    <li>Confirma notificación en Telegram</li>
-                </ol>
-            </div>
+                                <div class="info">
+                                    <h3>👤 User Scopes</h3>
+                                    <ul>
+                                        <<<<<<< HEAD <<<<<<< HEAD <li><code>user:read:admin</code> - Leer información de
+                                            usuario</li>
+                                            <li><code>user_profile</code> - Acceso al perfil de usuario</li>
+                                            =======
+                                            <li><code>user:read:admin</code> - Read user information</li>
+                                            <li><code>user_profile</code> - Access to user profile</li>
+                                            >>>>>>> origin/main
+                                            =======
+                                            <li><code>user:read:admin</code> - Read user information</li>
+                                            <li><code>user_profile</code> - Access to user profile</li>
+                                            >>>>>>> origin/main
+                                    </ul>
+                                </div>
 
-            <div class="info">
-                <h3>🔍 Troubleshooting:</h3>
-                <ul>
-                    <li><strong>Error 4700:</strong> Verifica OAuth Redirect URL</li>
-                    <li><strong>Invalid scope:</strong> Revisa scopes habilitados</li>
-                    <li><strong>Redirect mismatch:</strong> URL debe coincidir exactamente</li>
-                </ul>
-            </div>
-        </div>
+                                <div class="info">
+                                    <<<<<<< HEAD <<<<<<< HEAD <h3>💬 Chat Scopes (Opcional)</h3>
+                                        <ul>
+                                            <li><code>chat_message:read:admin</code> - Leer mensajes de chat</li>
+                                            <li><code>chat_message:write:admin</code> - Enviar mensajes de chat</li>
+                                            =======
+                                            =======
+                                            >>>>>>> origin/main
+                                            <h3>💬 Chat Scopes (Optional)</h3>
+                                            <ul>
+                                                <li><code>chat_message:read:admin</code> - Read chat messages</li>
+                                                <li><code>chat_message:write:admin</code> - Send chat messages</li>
+                                                <<<<<<< HEAD>>>>>>> origin/main
+                                                    =======
+                                                    >>>>>>> origin/main
+                                            </ul>
+                                </div>
+                        </div>
 
-        <div class="warning">
-            <h3>⚠️ Notas Importantes:</h3>
-            <ul>
-                <li>Las URLs de redirect deben usar <strong>HTTPS</strong></li>
-                <li>Los scopes <code>admin</code> pueden requerir aprobación de Zoom</li>
-                <li>Guarda tus credenciales de forma segura</li>
-                <li>No compartas tu Client Secret públicamente</li>
-            </ul>
-        </div>
+                        <div class="step-card">
+                            <<<<<<< HEAD <<<<<<< HEAD <h2><span class="step-number">4</span>Variables de Entorno</h2>
+                                <p>Configura las siguientes variables en tu archivo <code>.env</code>:</p>
+                                =======
+                                <h2><span class="step-number">4</span>Environment Variables</h2>
+                                <p>Configure the following variables in your <code>.env</code> file:</p>
+                                >>>>>>> origin/main
+                                =======
+                                <h2><span class="step-number">4</span>Environment Variables</h2>
+                                <p>Configure the following variables in your <code>.env</code> file:</p>
+                                >>>>>>> origin/main
+                                <div class="code-block">
+                                    # Zoom OAuth Configuration
+                                    ZOOM_CLIENT_ID=K3t8Sd3rSZOSKfkyMftDXg
+                                    ZOOM_CLIENT_SECRET=Gb9JmLsI1brv4bPdAPB9CSknQV4GiFB
+                                    ZOOM_REDIRECT_URI=https://pupfrisky.com/zoom-callback
 
-        <div class="nav-links">
-            <a href="/docs-setup.html">🔧 Setup Guide</a>
-            <a href="/docs-multipin.html">📌 Multipin Automation</a>
-            <a href="/docs-shortio.html">🔗 Short.io Setup</a>
-            <a href="https://github.com/PupFr/Nebulosa" target="_blank">📂 GitHub Repository</a>
-        </div>
-    </div>
-</body>
-</html>
+                                    # Bot Configuration
+                                    <<<<<<< HEAD <<<<<<< HEAD BOT_TOKEN=tu_telegram_bot_token
+                                        LOG_CHANNEL_ID=tu_canal_log_id=======BOT_TOKEN=your_telegram_bot_token
+                                        LOG_CHANNEL_ID=your_log_channel_id>>>>>>> origin/main
+                                        =======
+                                        BOT_TOKEN=your_telegram_bot_token
+                                        LOG_CHANNEL_ID=your_log_channel_id
+                                        >>>>>>> origin/main
+                                </div>
+                        </div>
+
+                        <div class="step-card">
+                            <<<<<<< HEAD <<<<<<< HEAD <h2><span class="step-number">5</span>Subir Webhook Files</h2>
+                                <p>Sube los archivos de callback a tu dominio:</p>
+
+                                <div class="warning">
+                                    <h3>📁 Archivos a subir a pupfrisky.com:</h3>
+                                    =======
+                                    =======
+                                    >>>>>>> origin/main
+                                    <h2><span class="step-number">5</span>Upload Webhook Files</h2>
+                                    <p>Upload the callback files to your domain:</p>
+
+                                    <div class="warning">
+                                        <h3>📁 Files to upload to pupfrisky.com:</h3>
+                                        <<<<<<< HEAD>>>>>>> origin/main
+                                            =======
+                                            >>>>>>> origin/main
+                                            <ul>
+                                                <li><code>zoom-callback.php</code> → <code>/zoom-callback.php</code>
+                                                </li>
+                                                <li><code>zoom-callback.html</code> → <code>/zoom-callback.html</code>
+                                                </li>
+                                            </ul>
+                                    </div>
+
+                                    <p>Métodos de subida:</p>
+                                    <ul>
+                                        <li><strong>FTP/SFTP:</strong> Usa FileZilla o WinSCP</li>
+                                        <li><strong>cPanel:</strong> File Manager</li>
+                                        <li><strong>Git:</strong> Push al repositorio y deploy</li>
+                                    </ul>
+                                </div>
+
+                                <div class="step-card">
+                                    <h2><span class="step-number">6</span>Probar OAuth Flow</h2>
+
+                                    <div class="success">
+                                        <h3>✅ Pasos de Prueba:</h3>
+                                        <ol>
+                                            <li>Usa <code>/zoomlogin</code> en tu bot de Telegram</li>
+                                            <li>Click en el enlace OAuth generado</li>
+                                            <li>Autoriza la aplicación en Zoom</li>
+                                            <li>Verifica redirección a tu dominio</li>
+                                            <li>Confirma notificación en Telegram</li>
+                                        </ol>
+                                    </div>
+
+                                    <div class="info">
+                                        <h3>🔍 Troubleshooting:</h3>
+                                        <ul>
+                                            <li><strong>Error 4700:</strong> Verifica OAuth Redirect URL</li>
+                                            <li><strong>Invalid scope:</strong> Revisa scopes habilitados</li>
+                                            <li><strong>Redirect mismatch:</strong> URL debe coincidir exactamente</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="warning">
+                                    <h3>⚠️ Notas Importantes:</h3>
+                                    <ul>
+                                        <li>Las URLs de redirect deben usar <strong>HTTPS</strong></li>
+                                        <li>Los scopes <code>admin</code> pueden requerir aprobación de Zoom</li>
+                                        <li>Guarda tus credenciales de forma segura</li>
+                                        <li>No compartas tu Client Secret públicamente</li>
+                                    </ul>
+                                </div>
+
+                                <div class="nav-links">
+                                    <a href="/docs-setup.html">🔧 Setup Guide</a>
+                                    <a href="/docs-multipin.html">📌 Multipin Automation</a>
+                                    <a href="/docs-shortio.html">🔗 Short.io Setup</a>
+                                    <a href="https://github.com/PupFr/Nebulosa" target="_blank" rel="noopener">📂 GitHub
+                                        Repository</a>
+                                </div>
+                        </div>
+        </body>
+
+        </html>

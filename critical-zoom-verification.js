@@ -1,0 +1,43 @@
+console.log('🚨 CRITICAL ZOOM APP VERIFICATION NEEDED');
+console.log('='.repeat(50));
+console.log('');
+
+console.log('🔍 You said URLs 2 and 4 worked in manual testing:');
+console.log('');
+console.log('✅ URL 2 WORKED:');
+console.log('   Client ID: vGVyI0IRv6si45iKO_qIw');
+console.log('   Redirect: https://pupfr.github.io/Nebulosa/zoom-callback.html');
+console.log('');
+console.log('✅ URL 4 WORKED:');
+console.log('   Client ID: K3t8Sd3rSZOSKfkyMftDXg');
+console.log('   Redirect: https://pupfr.github.io/Nebulosa/zoom-callback.html');
+console.log('');
+console.log('❌ BUT bot still gets 4700 error with URL 2 config');
+console.log('');
+console.log('🎯 URGENT ACTIONS NEEDED:');
+console.log('');
+console.log('1. 🔍 CHECK ZOOM APP OAUTH ALLOW LIST:');
+console.log('   • Go to: https://marketplace.zoom.us/develop/apps');
+console.log('   • Find app with Client ID: vGVyI0IRv6si45iKO_qIw');
+console.log('   • Check "OAuth Allow List" section');
+console.log('   • Verify it contains: https://pupfr.github.io/Nebulosa/zoom-callback.html');
+console.log('');
+console.log('2. 🔄 TRY THE OTHER WORKING CLIENT ID:');
+console.log('   • Maybe we should use K3t8Sd3rSZOSKfkyMftDXg instead');
+console.log('   • Since URL 4 also worked in your manual test');
+console.log('');
+console.log('3. 📝 VERIFY EXACT REDIRECT URL:');
+console.log('   • Check if it needs to be exactly:');
+console.log('   • https://pupfr.github.io/Nebulosa/zoom-callback.html (no trailing slash)');
+console.log('   • Case-sensitive match required');
+console.log('');
+
+console.log('❓ IMMEDIATE QUESTION:');
+console.log('When you tested URL 2 manually, did you copy it EXACTLY from the diagnostic output?');
+console.log('Or did you type it in browser? Please confirm the exact steps.');
+console.log('');
+
+console.log('💡 NEXT STEP:');
+console.log('1. Check your Zoom app OAuth Allow List');
+console.log('2. Tell me what redirect URLs you see listed there');
+console.log('3. I will match the bot configuration exactly to what is allowed');

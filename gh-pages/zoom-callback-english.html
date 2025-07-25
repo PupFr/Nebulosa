@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LA NUBE BOT - OAuth Success</title>
+    <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAANKSURBVFhH7ZdNaBNBFMdnk7RJ06SNH61WW1uxVkSxKFgQD4IHL148ePHgwYMHL168ePDgwYMHL168ePDgwYMHL168ePDgwYMFL168ePDgwYMXL168ePDgwYMXDx68eO/N7CbZZJNsNpvdSWYevPn95v0z782bnQH+U/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4z/Cf4T/Df4b/DP8Z/jP8Z/jP8J/hP8N/hv8M/xn+M/xn+M/wn+E/w3+G/wz/Gf4z/Gf4...
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1e3c72 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        h1 {
+            color: #2a5298;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+        
+        .success {
+            color: #28a745;
+            font-size: 1.2em;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        
+        ul {
+            text-align: left;
+            margin: 20px 0;
+            list-style: none;
+        }
+        
+        li {
+            margin: 10px 0;
+            padding: 5px 0;
+        }
+        
+        .highlight {
+            background: #e7f3ff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #2a5298;
+            font-weight: bold;
+        }
+        
+        p {
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+        
+        .redirect-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .countdown {
+            font-weight: bold;
+            color: #2a5298;
+        }
+        
+        .manual-link {
+            display: inline-block;
+            background: #2a5298;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .manual-link:hover {
+            background: #1e3c72;
+        }
+    </style>
+</head>
+<body>
+    <div class=" container">
+    <h1>🎉 Connection Successful!</h1>
+    <p class="success">✅ Your Zoom account has been connected successfully</p>
+    <p>Return to Telegram to use all bot commands:</p>
+    <ul>
+        <li><span class="highlight">/startsession</span> - Start Zoom session</li>
+        <li><span class="highlight">/createroom</span> - Create meeting with automatic multipin</li>
+        <li><span class="highlight">/startbot</span> - Start browser automation</li>
+        <li><span class="highlight">/botstatus</span> - Automation system status</li>
+        <li><span class="highlight">/status</span> - View complete system status</li>
+    </ul>
+    <p><strong>You can now close this window and return to Telegram!</strong></p>
+    <p style="margin-top: 30px; font-size: 0.9em; opacity: 0.8;">
+        🤖 LA NUBE BOT - Complete automation for Zoom
+    </p>
+    </div>
+
+    <script>
+        // Process OAuth callback via JavaScript
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const state = urlParams.get('state');
+        const error = urlParams.get('error');
+
+        // If no OAuth parameters, redirect to documentation
+        if (!code && !state && !error) {
+            document.querySelector('.container').innerHTML = `
+                <h1>📚 LA NUBE BOT Documentation</h1>
+                <div class="redirect-info">
+                    <p>Redirecting to complete documentation on GitHub...</p>
+                    <p class="countdown">Redirecting in <span id="countdown">5</span> seconds</p>
+                </div>
+                <a href="https://github.com/PupFr/Nebulosa/tree/main/docs" class="manual-link">
+                    📖 Go to GitHub Documentation Now
+                </a>
+                <p style="margin-top: 30px; font-size: 0.9em; opacity: 0.8;">
+                    🤖 LA NUBE BOT - Telegram Bot for Zoom automation<br>
+                    <strong>OAuth Endpoint:</strong> This link also serves as callback for Zoom authentication
+                </p>
+            `;
+
+            let countdown = 5;
+            function updateCountdown() {
+                const countdownElement = document.getElementById('countdown');
+                if (countdownElement) {
+                    countdownElement.textContent = countdown;
+                    countdown--;
+                    if (countdown < 0) {
+                        window.location.href = 'https://github.com/PupFr/Nebulosa/tree/main/docs';
+                    }
+                }
+            }
+            setInterval(updateCountdown, 1000);
+            updateCountdown();
+            return;
+        }
+
+        if (error) {
+            document.querySelector('.container').innerHTML = `
+                <h1>❌ Authorization Error</h1>
+                <p>Error: ${error}</p>
+                <p>Please try the /zoomlogin command again in Telegram.</p>
+            `;
+        } else if (code && state) {
+            // Send notification via webhook
+            fetch('https://api.telegram.org/bot8113796108:AAHvZqXdqTRzor5ep7tV0OCDWzQO_8TjBUg/sendMessage', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: state,
+                    text: `✅ OAuth successful!\n🔗 Code received: ${code.substring(0, 20)}...\n📱 Return to Telegram to continue.`
+                })
+            });
+
+            console.log('OAuth callback processed:', { code, state });
+        } else {
+            document.querySelector('.container').innerHTML = `
+                <h1>❌ OAuth Error</h1>
+                <p>No authorization code received from Zoom.</p>
+                <p>Please try the /zoomlogin command again in Telegram.</p>
+            `;
+        }
+    </script>
+    </body>
+
+</html>
