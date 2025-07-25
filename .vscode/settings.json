@@ -1,0 +1,21 @@
+{
+    "sonarlint.connectedMode.project": {
+        "connectionId": "Frisky Develpments",
+        "projectKey": "PupFr_Nebulosa"
+    },
+    "sonarlint.connectedMode.connections.sonarcloud": [
+        {
+            "connectionId": "sonarcloud",
+            "serverUrl": "https://sonarcloud.io",
+            "organizationKey": "pupfr"
+        }
+    ],
+    "sonarlint.ls.javaHome": "",
+    "sonarlint.rules": {
+        "javascript:S6418": "on",
+        "javascript:S4502": "on",
+        "javascript:S2068": "on",
+        "javascript:S6290": "on"
+    },
+    "sonarlint.output.showVerboseLogs": true
+}

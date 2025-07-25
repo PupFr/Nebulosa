@@ -36,6 +36,10 @@ console.log('✅ Bot initialized with modern polling configuration');
 
 // Express app for health checks
 const app = express();
+const securityHeaders = require('./security-headers');
+
+// Apply security headers to all routes
+app.use(securityHeaders);
 app.use(express.json());
 
 // Health check endpoint (required by Railway)

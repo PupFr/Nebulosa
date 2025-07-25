@@ -1,15 +1,40 @@
 const TelegramBot = require('node-telegram-bot-api');
 const crypto = require('crypto');
-const fs = require('fs');
-const path = require('path');
 
-// Environment configuration
-const BOT_TOKEN = process.env.BOT_TOKEN || '8113796108:AAHvZqXdqTRzor5ep7tV0OCDWzQO_8TjBUg';
-const ZOOM_CLIENT_ID = process.env.ZOOM_CLIENT_ID || 'K3t8Sd3rSZOSKfkyMftDXg';
-const ZOOM_CLIENT_SECRET = process.env.ZOOM_CLIENT_SECRET || 'Gb9JmLsI1brv4bPdAPB9CSknQV4GiFB';
-const ZOOM_REDIRECT_URI = process.env.ZOOM_REDIRECT_URI || 'https://pupfr.github.io/Nebulosa/zoom-callback-english.html';
+// Environment configuration - secure implementation
+const BOT_TOKEN = process.env.BOT_TOKEN;
+const ZOOM_CLIENT_ID = process.env.ZOOM_CLIENT_ID;
+const ZOOM_REDIRECT_URI = process.env.ZOOM_REDIRECT_URI;
 
-console.log('🚀 Starting LA NUBE BOT - Streamlined Version...');
+// Validate required environment variables
+function validateEnvironment() {
+    const required = {
+        BOT_TOKEN: 'Telegram bot token',
+        ZOOM_CLIENT_ID: 'Zoom OAuth client ID',
+        ZOOM_CLIENT_SECRET: 'Zoom OAuth client secret',
+        ZOOM_REDIRECT_URI: 'Zoom OAuth redirect URI'
+    };
+
+    const missing = [];
+    for (const [key, description] of Object.entries(required)) {
+        if (!process.env[key]) {
+            missing.push(`${key} (${description})`);
+        }
+    }
+
+    if (missing.length > 0) {
+        console.error('❌ Missing required environment variables:');
+        missing.forEach(variable => console.error(`   - ${variable}`));
+        console.error('\n🔧 Please set these environment variables before running the bot.');
+        console.error('📚 See documentation: https://github.com/PupFr/Nebulosa#environment-setup');
+        process.exit(1);
+    }
+}
+
+// Validate environment on startup
+validateEnvironment();
+
+console.log('🚀 Starting NEBULOSA BOT - Streamlined Version...');
 console.log('📦 Node version:', process.version);
 console.log('🔧 Environment:', process.env.NODE_ENV || 'development');
 
@@ -30,12 +55,33 @@ const adminUsers = new Set(['PUPFRISKY', 'pupfrisky']); // Add admin usernames
 
 // Helper functions
 function isAdmin(msg) {
-    return adminUsers.has(msg.from.username?.toLowerCase());
+    // Validate message structure
+    if (!msg || !msg.from || !msg.from.username) {
+        return false;
+    }
+
+    const username = msg.from.username.toLowerCase();
+    // Sanitize username input
+    const sanitizedUsername = username.replace(/[^a-z0-9_]/g, '');
+
+    return adminUsers.has(sanitizedUsername);
 }
 
 function log(message, level = 'INFO') {
+    // Input validation and sanitization
+    if (typeof message !== 'string') {
+        message = String(message);
+    }
+    if (typeof level !== 'string') {
+        level = 'INFO';
+    }
+
+    // Sanitize log message to prevent log injection
+    const sanitizedMessage = message.replace(/[\r\n\t]/g, ' ').substring(0, 500);
+    const sanitizedLevel = level.replace(/[^A-Z]/g, '').substring(0, 10);
+
     const timestamp = new Date().toISOString();
-    console.log(`[${timestamp}] ${level}: ${message}`);
+    console.log(`[${timestamp}] ${sanitizedLevel}: ${sanitizedMessage}`);
 }
 
 // Main start command with streamlined menu
@@ -45,9 +91,9 @@ bot.onText(/\/start/, (msg) => {
 
     log(`/start command from ${username} (${chatId})`);
 
-    const welcomeMessage = `🌟 Welcome to La NUBE BOT! ☁️
+    const welcomeMessage = `🌟 Welcome to NEBULOSA BOT! ☁️
 
-Hello ${username.toUpperCase()}! I'm your Zoom meeting assistant.
+Hello ${username.toUpperCase()}! I'm your Zoom meeting management assistant.
 
 Available Commands:
 /start - Show this message
@@ -88,21 +134,49 @@ bot.onText(/\/zoomlogin/, (msg) => {
     log(`/zoomlogin command from ${username}`);
 
     try {
-        // Generate state parameter for security
+        // Generate cryptographically secure state parameter
         const state = crypto.randomBytes(32).toString('hex');
-        sessions.set(chatId, { state, username, timestamp: Date.now() });
 
-        // Build OAuth URL
-        const authUrl = `https://zoom.us/oauth/authorize?` +
-            `response_type=code&` +
-            `client_id=${ZOOM_CLIENT_ID}&` +
-            `redirect_uri=${encodeURIComponent(ZOOM_REDIRECT_URI)}&` +
-            `state=${state}&` +
-            `scope=meeting:write:admin meeting:read:admin user:read:admin user_profile`;
+        // Validate state parameter length and format
+        if (state.length !== 64 || !/^[a-f0-9]{64}$/.test(state)) {
+            throw new Error('Failed to generate secure state parameter');
+        }
+
+        sessions.set(chatId, {
+            state,
+            username,
+            timestamp: Date.now(),
+            // Add security metadata
+            userAgent: 'TelegramBot',
+            ipAddress: 'telegram-network'
+        });
+
+        // Build OAuth URL with proper validation and encoding
+        const oauthParams = new URLSearchParams({
+            response_type: 'code',
+            client_id: ZOOM_CLIENT_ID,
+            redirect_uri: ZOOM_REDIRECT_URI,
+            state: state,
+            scope: 'meeting:read:meeting meeting:write:meeting meeting:update:meeting meeting:read:participant meeting:update:in_meeting_controls meeting:read:chat_message user:read:user user:read:email zoomapp:inmeeting'
+        });
+
+        // Validate OAuth parameters
+        if (!ZOOM_CLIENT_ID || !ZOOM_REDIRECT_URI) {
+            throw new Error('Missing required OAuth configuration');
+        }
+
+        const authUrl = `https://zoom.us/oauth/authorize?${oauthParams.toString()}`;
+
+        // Validate final URL
+        try {
+            new URL(authUrl); // This will throw if URL is invalid
+        } catch {
+            throw new Error('Invalid OAuth URL constructed');
+        }
 
         const message = `🔐 Zoom OAuth Authentication
 
-Click the link below to authorize LA NUBE BOT:
+Click the link below to authorize NEBULOSA BOT:
 ${authUrl}
 
 ⚠️ This link expires in 10 minutes for security.`;
@@ -289,7 +363,7 @@ bot.onText(/\/shutdown/, (msg) => {
     }
 
     log(`/shutdown command from admin ${msg.from.username}`);
-    bot.sendMessage(chatId, '🛑 Shutting down LA NUBE BOT...\n\n👋 Goodbye!')
+    bot.sendMessage(chatId, '🛑 Shutting down NEBULOSA BOT...\n\n👋 Goodbye!')
         .then(() => {
             process.exit(0);
         });
@@ -329,7 +403,7 @@ bot.on('error', (error) => {
 });
 
 // Startup confirmation
-console.log('✅ LA NUBE BOT initialized with streamlined commands');
+console.log('✅ NEBULOSA BOT initialized with streamlined commands');
 console.log('🔄 Polling mode active');
 console.log('🤖 Bot is ready to receive commands!');
 
